@@ -1,0 +1,41 @@
+spring:
+  profiles.active: dev
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  cache:
+    type: redis
+  redis:
+    host: redis
+    port: 6379
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+logging.level:
+  org.hibernate.SQL: debug
+
+---
+
+spring:
+  config.activate.on-profile: prod
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${db_url}
+    username: ${db_username}
+    password: ${db_password}
+
+---
+
+spring:
+  config.activate.on-profile: dev
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/dasibom-prac?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+    username: admin
+    password: admin
+
+
