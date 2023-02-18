@@ -12,5 +12,5 @@ public class Stamp {
     @Column(name = "stampId")
     private Long id;
 
-    //private StampType stampType;
+    private StampType stampType;
 }
