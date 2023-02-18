@@ -1,7 +1,6 @@
 package com.dasibom.practice.domain;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,8 +8,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 public class Diary {
@@ -23,13 +25,19 @@ public class Diary {
     @JoinColumn(name = "petId")
     private Pet pet;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "diaryStampId")
+    private DiaryStamp stamps;
+
     private String title;
     private String content;
 
-    @ManyToMany
-    private List<Stamp> stamps;
-
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     private LocalDate createdAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     private LocalDate updatedAt;
 
     //@ManyToOne
