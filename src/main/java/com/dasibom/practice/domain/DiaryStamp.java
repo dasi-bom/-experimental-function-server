@@ -1,13 +1,13 @@
 package com.dasibom.practice.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class DiaryStamp {
@@ -16,10 +16,12 @@ public class DiaryStamp {
     @Column(name = "diaryStampId")
     private Long id;
 
-    @OneToMany(mappedBy = "stamps")
-    private List<Diary> diaries = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "diaryId")
+    private Diary diary;
 
-    @OneToMany(mappedBy = "diaries")
-    private List<Stamp> stamps = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "stampId")
+    private Stamp stamp;
 
 }

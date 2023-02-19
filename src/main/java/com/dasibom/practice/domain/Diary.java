@@ -1,7 +1,9 @@
 package com.dasibom.practice.domain;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -25,9 +28,8 @@ public class Diary {
     @JoinColumn(name = "petId")
     private Pet pet;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "diaryStampId")
-    private DiaryStamp stamps;
+    @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
+    private List<DiaryStamp> stamps;
 
     private String title;
     private String content;
