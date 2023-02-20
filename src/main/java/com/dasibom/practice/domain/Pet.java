@@ -4,10 +4,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -17,12 +21,16 @@ public class Pet {
     @Column(name = "petId")
     private Long id;
 
+    @OneToMany(mappedBy = "pet")
+    private List<Diary> diaryList = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "ownerId")
+    private User owner;
+
     private String petName;
 
     private LocalDate protectionStartedAt;
 
     private LocalDate protectionEndedAt;
-
-    @OneToMany(mappedBy = "pet")
-    private List<Diary> diaryList = new ArrayList<>();
 }

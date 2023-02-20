@@ -28,6 +28,10 @@ public class Diary {
     @JoinColumn(name = "petId")
     private Pet pet;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "authorId")
+    private User author;
+
     @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
     private List<DiaryStamp> stamps;
 
@@ -41,7 +45,4 @@ public class Diary {
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     private LocalDate updatedAt;
-
-    //@ManyToOne
-    //private User author;
 }
