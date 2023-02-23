@@ -8,14 +8,19 @@ spring:
         globally_quoted_identifiers: true
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
-  cache:
-    type: redis
-  redis:
-    host: redis
-    port: 6379
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  # ==== S3 파일 업로드 용량 설정 ==== #
+  servlet:
+    multipart:
+      max-file-size: 3MB # 업로드 파일 크기 제한
+      max-request-size: 5MB # 업로드 파일 크기 총량 제한
+  # ==== 외부 설정파일 주입 ==== #
+  config:
+    import:
+      - aws-s3.yml
+
 logging.level:
   org.hibernate.SQL: debug
 
