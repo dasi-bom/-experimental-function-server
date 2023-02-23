@@ -1,6 +1,7 @@
 package com.dasibom.practice.domain;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -27,6 +28,9 @@ public class Diary {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "authorId")
     private User author;
+
+    @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
+    private List<DiaryImage> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
     private List<DiaryStamp> stamps;
