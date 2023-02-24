@@ -1,5 +1,6 @@
 package com.dasibom.practice.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,10 +18,10 @@ public class User {
     private Long id;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
-    private List<Pet> pets;
+    private List<Pet> pets = new ArrayList<>();
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    private List<Diary> diaries;
+    private List<Diary> diaries = new ArrayList<>();
 
     private String username;
     private String password;

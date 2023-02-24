@@ -9,8 +9,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class Stamp {
     @Id
     @GeneratedValue

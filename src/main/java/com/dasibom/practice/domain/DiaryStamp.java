@@ -8,8 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.Setter;
 
 @Entity
+@Setter
 public class DiaryStamp {
     @Id
     @GeneratedValue
@@ -23,4 +25,11 @@ public class DiaryStamp {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "stampId")
     private Stamp stamp;
+
+    public static DiaryStamp createDiaryStamp(Stamp stamp) {
+        DiaryStamp diaryStamp = new DiaryStamp();
+        diaryStamp.setStamp(stamp);
+        return diaryStamp;
+    }
+
 }
