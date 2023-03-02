@@ -1,6 +1,5 @@
 package com.dasibom.practice.domain;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,24 +12,17 @@ import lombok.Setter;
 
 @Entity
 @Setter
-public class DiaryStamp {
+public class DiaryImage {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "diaryStampId")
+    @Column(name = "diaryImageId")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private String imgUrl;
+    private String fileName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diaryId")
     private Diary diary;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "stampId")
-    private Stamp stamp;
-
-    public static DiaryStamp createDiaryStamp(Stamp stamp) {
-        DiaryStamp diaryStamp = new DiaryStamp();
-        diaryStamp.setStamp(stamp);
-        return diaryStamp;
-    }
-
 }
