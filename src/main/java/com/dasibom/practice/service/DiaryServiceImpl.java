@@ -5,6 +5,7 @@ import com.dasibom.practice.domain.DiaryStamp;
 import com.dasibom.practice.domain.Pet;
 import com.dasibom.practice.domain.Stamp;
 import com.dasibom.practice.domain.User;
+import com.dasibom.practice.domain.dto.DiaryDetailResDto;
 import com.dasibom.practice.domain.dto.DiarySaveReqDto;
 import com.dasibom.practice.repository.DiaryRepository;
 import com.dasibom.practice.repository.PetRepository;
@@ -48,6 +49,17 @@ public class DiaryServiceImpl implements DiaryService {
                 return getDiary(requestDto, user.get(), diaryStamps, pet.get());
             }
             return null;
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public DiaryDetailResDto getDetailedDiary(Long diaryId) {
+        Optional<Diary> diary = diaryRepository.findById(diaryId);
+        // TODO: exception handling
+        if (diary.isPresent()) {
+            return new DiaryDetailResDto(diary.get());
         }
         return null;
     }
