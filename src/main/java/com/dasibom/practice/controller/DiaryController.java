@@ -2,8 +2,8 @@ package com.dasibom.practice.controller;
 
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.Response;
-import com.dasibom.practice.domain.dto.DiaryDetailResDto;
-import com.dasibom.practice.domain.dto.DiarySaveReqDto;
+import com.dasibom.practice.dto.DiaryDetailResDto;
+import com.dasibom.practice.dto.DiarySaveReqDto;
 import com.dasibom.practice.service.DiaryService;
 import com.dasibom.practice.service.S3Service;
 import java.util.List;

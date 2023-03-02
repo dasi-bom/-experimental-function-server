@@ -1,4 +1,4 @@
-package com.dasibom.practice.domain.dto;
+package com.dasibom.practice.dto;
 
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.DiaryImage;

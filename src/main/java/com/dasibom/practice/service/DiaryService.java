@@ -1,8 +1,8 @@
 package com.dasibom.practice.service;
 
 import com.dasibom.practice.domain.Diary;
-import com.dasibom.practice.domain.dto.DiaryDetailResDto;
-import com.dasibom.practice.domain.dto.DiarySaveReqDto;
+import com.dasibom.practice.dto.DiaryDetailResDto;
+import com.dasibom.practice.dto.DiarySaveReqDto;
 
 public interface DiaryService {
 
