@@ -16,6 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DiaryStamp {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "diaryStampId")

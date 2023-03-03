@@ -1,5 +1,11 @@
 package com.dasibom.practice.service;
 
+import static com.dasibom.practice.exception.ErrorCode.DIARY_NOT_FOUND;
+import static com.dasibom.practice.exception.ErrorCode.PET_NOT_FOUND;
+import static com.dasibom.practice.exception.ErrorCode.STAMP_LIST_SIZE_ERROR;
+import static com.dasibom.practice.exception.ErrorCode.STAMP_NOT_FOUND;
+import static com.dasibom.practice.exception.ErrorCode.USER_NOT_FOUND;
+
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.DiaryStamp;
 import com.dasibom.practice.domain.Pet;
@@ -7,13 +13,13 @@ import com.dasibom.practice.domain.Stamp;
 import com.dasibom.practice.domain.User;
 import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiarySaveReqDto;
+import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.repository.DiaryRepository;
 import com.dasibom.practice.repository.PetRepository;
 import com.dasibom.practice.repository.StampRepository;
 import com.dasibom.practice.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,34 +40,27 @@ public class DiaryServiceImpl implements DiaryService {
     public Diary save(DiarySaveReqDto requestDto) {
 
         // TODO: 하드 코딩 변경
-        Optional<User> user = userRepository.findByUsername("test");
+        User user = userRepository.findByUsername("test")
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        if (user.isPresent()) {
-            int stampListSize = 3;
-//        if (stamps.size() > stampListSize) {
-//            TODO: exception handling
-//        }
-
-            List<Stamp> stamps = getStamps(requestDto);
-            List<DiaryStamp> diaryStamps = getDiaryStamps(stamps);
-            Optional<Pet> pet = petRepository.findByPetName(requestDto.getPet().getPetName());
-            if (pet.isPresent()) {
-                return getDiary(requestDto, user.get(), diaryStamps, pet.get());
-            }
-            return null;
+        int stampListSize = 3;
+        List<Stamp> stamps = getStamps(requestDto);
+        if (stamps.size() > stampListSize) {
+            throw new CustomException(STAMP_LIST_SIZE_ERROR);
         }
-        return null;
+
+        List<DiaryStamp> diaryStamps = getDiaryStamps(stamps);
+        Pet pet = petRepository.findByPetName(requestDto.getPet().getPetName())
+                .orElseThrow(() -> new CustomException(PET_NOT_FOUND));
+        return getDiary(requestDto, user, diaryStamps, pet);
     }
 
     @Override
     @Transactional
     public DiaryDetailResDto getDetailedDiary(Long diaryId) {
-        Optional<Diary> diary = diaryRepository.findById(diaryId);
-        // TODO: exception handling
-        if (diary.isPresent()) {
-            return new DiaryDetailResDto(diary.get());
-        }
-        return null;
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(() -> new CustomException(DIARY_NOT_FOUND));
+        return new DiaryDetailResDto(diary);
     }
 
     private Diary getDiary(DiarySaveReqDto requestDto, User user, List<DiaryStamp> diaryStamps, Pet pet) {
@@ -82,11 +81,9 @@ public class DiaryServiceImpl implements DiaryService {
     private List<Stamp> getStamps(DiarySaveReqDto requestDto) {
         List<Stamp> stamps = new ArrayList<>();
         for (Stamp stamp : requestDto.getStamps()) {
-            // TODO: exception handling
-            Optional<Stamp> byStampType = stampRepository.findByStampType(stamp.getStampType());
-            if (byStampType.isPresent()) {
-                stamps.add(byStampType.get());
-            }
+            Stamp byStampType = stampRepository.findByStampType(stamp.getStampType())
+                    .orElseThrow(() -> new CustomException(STAMP_NOT_FOUND));
+            stamps.add(byStampType);
         }
         return stamps;
     }

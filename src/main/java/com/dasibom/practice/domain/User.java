@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 
 @Entity
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId")

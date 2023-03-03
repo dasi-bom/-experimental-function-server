@@ -7,6 +7,7 @@ import com.dasibom.practice.dto.DiarySaveReqDto;
 public interface DiaryService {
 
     Diary save(DiarySaveReqDto requestDto);
+
     DiaryDetailResDto getDetailedDiary(Long diaryId);
 
 }

@@ -17,6 +17,7 @@ import lombok.Getter;
 @Entity
 @Getter
 public class Stamp {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stampId")
