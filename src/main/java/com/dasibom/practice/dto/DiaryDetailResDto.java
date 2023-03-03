@@ -3,29 +3,22 @@ package com.dasibom.practice.dto;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.DiaryImage;
 import com.dasibom.practice.domain.DiaryStamp;
-import com.dasibom.practice.domain.Stamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@Slf4j
 public class DiaryDetailResDto {
 
-    private String title;
-    private String content;
-    private String petName;
-    private List<String> imgUrls = new ArrayList<>();
-    private List<String> stampTypes = new ArrayList<>();
-    private LocalDate createdAt;
+    private final String title;
+    private final String content;
+    private final String petName;
+    private final List<String> imgUrls = new ArrayList<>();
+    private final List<String> stampTypes = new ArrayList<>();
+    private final LocalDate createdAt;
 
     public DiaryDetailResDto(Diary entity) {
         this.title = entity.getTitle();
