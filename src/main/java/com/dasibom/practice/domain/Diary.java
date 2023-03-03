@@ -21,6 +21,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @Getter
 @Setter
 public class Diary {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "diaryId")
@@ -54,7 +55,7 @@ public class Diary {
         diaryStamp.setDiary(this);
     }
 
-    public static Diary createDiary(User user,Pet pet, String title, String content, List<DiaryStamp> stamps) {
+    public static Diary createDiary(User user, Pet pet, String title, String content, List<DiaryStamp> stamps) {
         Diary diary = new Diary();
         diary.setAuthor(user);
         diary.setPet(pet);

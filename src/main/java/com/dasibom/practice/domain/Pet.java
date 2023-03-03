@@ -19,6 +19,7 @@ import lombok.Getter;
 @Entity
 @Getter
 public class Pet {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "petId")

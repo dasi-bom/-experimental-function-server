@@ -19,9 +19,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected Object handleMethodArgumentNotValidException(MethodArgumentNotValidException ex,
-        HttpServletRequest request) {
+            HttpServletRequest request) {
         String defaultMessage = Objects.requireNonNull(ex.getBindingResult().getFieldError()).getDefaultMessage();
         return ErrorResponse.toResponseEntity(METHOD_ARG_NOT_VALID, defaultMessage);
     }
