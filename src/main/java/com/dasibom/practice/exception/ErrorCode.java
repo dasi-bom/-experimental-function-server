@@ -21,6 +21,7 @@ public enum ErrorCode {
     STAMP_NOT_FOUND(HttpStatus.NOT_FOUND, "스탬프를 찾을 수 없습니다"),
 
     /* 500 INTERNAL_SERVER_ERROR : 서버 에러 */
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 에러가 발생했습니다."),
     FILE_CAN_NOT_UPLOAD(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다."),
     FILE_CAN_NOT_DELETE(HttpStatus.INTERNAL_SERVER_ERROR, "파일 삭제에 실패했습니다."),
 
