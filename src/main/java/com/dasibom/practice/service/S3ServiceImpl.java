@@ -1,11 +1,15 @@
 package com.dasibom.practice.service;
 
+import static com.dasibom.practice.exception.ErrorCode.FILE_CAN_NOT_UPLOAD;
+import static com.dasibom.practice.exception.ErrorCode.INVALID_FILE_ERROR;
+
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.DiaryImage;
+import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.repository.DiaryImageRepository;
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,8 +67,7 @@ public class S3ServiceImpl implements S3Service {
                 amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
                         .withCannedAcl(CannedAccessControlList.PublicRead));
             } catch (IOException e) {
-                // TODO: exception handling
-                log.error(e.getMessage());
+                throw new CustomException(FILE_CAN_NOT_UPLOAD);
             }
 
             fileNameList.add(fileName);
@@ -95,9 +98,7 @@ public class S3ServiceImpl implements S3Service {
         if (fileExtension.equals(".jpeg") || fileExtension.equals(".jpg") || fileExtension.equals(".png")) {
             return fileExtension;
         } else {
-            // TODO: exception handling
-            log.error("error!!!");
-            return null;
+            throw new CustomException(INVALID_FILE_ERROR);
         }
     }
 
