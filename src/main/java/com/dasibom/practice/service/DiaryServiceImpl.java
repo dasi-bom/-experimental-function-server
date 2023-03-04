@@ -6,11 +6,13 @@ import static com.dasibom.practice.exception.ErrorCode.STAMP_LIST_SIZE_ERROR;
 import static com.dasibom.practice.exception.ErrorCode.STAMP_NOT_FOUND;
 import static com.dasibom.practice.exception.ErrorCode.USER_NOT_FOUND;
 
+import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.DiaryStamp;
 import com.dasibom.practice.domain.Pet;
 import com.dasibom.practice.domain.Stamp;
 import com.dasibom.practice.domain.User;
+import com.dasibom.practice.dto.DiaryBriefInfoDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiarySaveReqDto;
 import com.dasibom.practice.exception.CustomException;
@@ -23,6 +25,8 @@ import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -61,6 +65,12 @@ public class DiaryServiceImpl implements DiaryService {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new CustomException(DIARY_NOT_FOUND));
         return new DiaryDetailResDto(diary);
+    }
+
+    @Override
+    @Transactional
+    public Slice<DiaryBriefInfoDto> getDiaryList(Long cursor, DiaryReadCondition condition, Pageable pageRequest) {
+        return diaryRepository.getDiaryBriefInfoScroll(cursor, condition, pageRequest);
     }
 
     private Diary getDiary(DiarySaveReqDto requestDto, User user, List<DiaryStamp> diaryStamps, Pet pet) {

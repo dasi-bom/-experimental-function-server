@@ -1,7 +1,10 @@
 package com.dasibom.practice.controller;
 
+import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
+import com.dasibom.practice.domain.Pet;
 import com.dasibom.practice.domain.Response;
+import com.dasibom.practice.dto.DiaryBriefInfoDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiarySaveReqDto;
 import com.dasibom.practice.service.DiaryService;
@@ -10,7 +13,11 @@ import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +50,15 @@ public class DiaryController {
     @GetMapping("/detail/{diaryId}")
     public DiaryDetailResDto getDetailedDiary(@PathVariable("diaryId") long diaryId) {
         return diaryService.getDetailedDiary(diaryId);
+    }
+
+    @GetMapping("/list")
+    public Slice<DiaryBriefInfoDto> list(Long cursor, String searchKeyword, Pet pet,
+            @PageableDefault(size = 5, sort = "createAt") Pageable pageRequest) {
+        if (StringUtils.hasText(searchKeyword)) {
+            return diaryService.getDiaryList(cursor, new DiaryReadCondition(searchKeyword), pageRequest); // searchKeyword 가 포함된 일기 조회
+        }
+        return diaryService.getDiaryList(cursor, new DiaryReadCondition(), pageRequest); // 모든 일기 조회
     }
 
 }
