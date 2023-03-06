@@ -81,9 +81,15 @@ public class DiaryServiceImpl implements DiaryService {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new CustomException(DIARY_NOT_FOUND));
 
-        List<DiaryStamp> oldDiaryStamps = diary.getDiaryStamps();
+        // 누구의 일기인가요? 변경
+        Pet pet = null;
+        if (updateRequestDto.getPet() != null) {
+            pet = petRepository.findByPetName(updateRequestDto.getPet().getPetName())
+                    .orElseThrow(() -> new CustomException(PET_NOT_FOUND));
+        }
 
         // initialize oldStamps
+        List<DiaryStamp> oldDiaryStamps = diary.getDiaryStamps();
         List<Stamp> oldStamps = new ArrayList<>();
         for (DiaryStamp oldDiaryStamp : oldDiaryStamps) {
             oldStamps.add(oldDiaryStamp.getStamp());
@@ -109,7 +115,7 @@ public class DiaryServiceImpl implements DiaryService {
         }
 
         // 일기 update
-        diary.updateDiary(updateRequestDto.getTitle(), updateRequestDto.getContent(), newDiaryStamps);
+        diary.updateDiary(updateRequestDto.getTitle(), updateRequestDto.getContent(), newDiaryStamps, pet);
 
     }
 

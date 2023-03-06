@@ -70,7 +70,7 @@ public class Diary {
         return diary;
     }
 
-    public void updateDiary(String title, String content, List<DiaryStamp> diaryStamps) {
+    public void updateDiary(String title, String content, List<DiaryStamp> diaryStamps, Pet pet) {
 
         if (StringUtils.isNotBlank(title)) {
             this.title = title;
@@ -82,6 +82,9 @@ public class Diary {
             for (DiaryStamp diaryStamp : diaryStamps) {
                 this.addDiaryStamp(diaryStamp);
             }
+        }
+        if (pet != null) {
+            this.pet = pet;
         }
     }
 }
