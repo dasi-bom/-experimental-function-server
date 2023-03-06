@@ -30,19 +30,20 @@ public class CustomDiaryRepositoryImpl implements CustomDiaryRepository {
     // 게시글 조회 및 검색
     @Override
     public Slice<DiaryBriefInfoDto> getDiaryBriefInfoScroll(Long cursorId, DiaryReadCondition condition,
-        Pageable pageable) {
+            Pageable pageable) {
 
         List<Diary> diaryList = queryFactory
-            .select(diary)
-            .from(diary)
-            .where(
-                eqTitle(condition.getSearchKeyword()),
-                eqContent(condition.getSearchKeyword()),
-                eqCursorId(cursorId)
-            )
-            .limit(pageable.getPageSize() + 1) // limit 보다 데이터를 1개 더 들고와서, 해당 데이터가 있다면 hasNext 변수에 true 를 넣어 알림
-            .orderBy(sortDiaryList(pageable)) // 최신순 정렬
-            .fetch();
+                .select(diary)
+                .from(diary)
+                .where(
+                        eqIsDeleted(condition.getIsDeleted()), // 삭제되지 않은 일기만 조회
+                        eqTitle(condition.getSearchKeyword()),
+                        eqContent(condition.getSearchKeyword()),
+                        eqCursorId(cursorId)
+                )
+                .limit(pageable.getPageSize() + 1) // limit 보다 데이터를 1개 더 들고와서, 해당 데이터가 있다면 hasNext 변수에 true 를 넣어 알림
+                .orderBy(sortDiaryList(pageable)) // 최신순 정렬
+                .fetch();
 
         List<DiaryBriefInfoDto> briefDiaryInfos = new ArrayList<>();
         for (Diary diary : diaryList) {
@@ -80,6 +81,11 @@ public class CustomDiaryRepositoryImpl implements CustomDiaryRepository {
     //동적 쿼리를 위한 BooleanExpression
     private BooleanExpression eqCursorId(Long cursorId) {
         return (cursorId == null) ? null : diary.id.lt(cursorId); // lt: 작다
+    }
+
+    // 삭제된 게시글인지 필터링
+    private BooleanExpression eqIsDeleted(Boolean isDeleted) {
+        return (isDeleted == null) ? null : diary.isDeleted.eq(isDeleted);
     }
 
     // 제목에 keyword 포함되어있는지 필터링
