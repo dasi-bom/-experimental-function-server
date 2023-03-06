@@ -78,13 +78,18 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     @Transactional
     public void update(Long diaryId, DiaryUpdateReqDto updateRequestDto) {
+
+        // TODO: 하드 코딩 변경
+        User user = userRepository.findByUsername("test")
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new CustomException(DIARY_NOT_FOUND));
 
         // 누구의 일기인가요? 변경
         Pet pet = null;
         if (updateRequestDto.getPet() != null) {
-            pet = petRepository.findByPetName(updateRequestDto.getPet().getPetName())
+            pet = petRepository.findByPetNameAndOwner(updateRequestDto.getPet().getPetName(), user)
                     .orElseThrow(() -> new CustomException(PET_NOT_FOUND));
         }
 
