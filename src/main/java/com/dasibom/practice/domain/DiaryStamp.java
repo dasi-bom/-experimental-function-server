@@ -1,5 +1,6 @@
 package com.dasibom.practice.domain;
 
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,6 +35,14 @@ public class DiaryStamp {
         DiaryStamp diaryStamp = new DiaryStamp();
         diaryStamp.setStamp(stamp);
         return diaryStamp;
+    }
+
+    public static void removeDiaryStamp(List<DiaryStamp> stamps) {
+        // diaryId 와 stampId 의 매핑 제거
+        for (DiaryStamp stamp : stamps) {
+            stamp.setDiary(null);
+            stamp.setStamp(null);
+        }
     }
 
 }

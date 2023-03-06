@@ -9,9 +9,11 @@ import com.dasibom.practice.domain.Response;
 import com.dasibom.practice.dto.DiaryBriefInfoDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiarySaveReqDto;
+import com.dasibom.practice.dto.DiaryUpdateReqDto;
 import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.service.DiaryService;
 import com.dasibom.practice.service.S3Service;
+import io.swagger.annotations.ApiParam;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -79,6 +82,12 @@ public class DiaryController {
                     pageRequest); // searchKeyword 가 포함된 일기 조회
         }
         return diaryService.getDiaryList(cursor, new DiaryReadCondition(), pageRequest); // 모든 일기 조회
+    }
+
+    @PatchMapping("/{diaryId}")
+    public Response update(@PathVariable("diaryId") long diaryId, @RequestBody @Valid DiaryUpdateReqDto updateRequestDto) {
+        diaryService.update(diaryId, updateRequestDto);
+        return new Response("OK", "일기 수정에 성공했습니다");
     }
 
 }

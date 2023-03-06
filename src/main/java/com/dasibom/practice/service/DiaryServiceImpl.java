@@ -15,6 +15,7 @@ import com.dasibom.practice.domain.User;
 import com.dasibom.practice.dto.DiaryBriefInfoDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiarySaveReqDto;
+import com.dasibom.practice.dto.DiaryUpdateReqDto;
 import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.repository.DiaryRepository;
 import com.dasibom.practice.repository.PetRepository;
@@ -48,13 +49,13 @@ public class DiaryServiceImpl implements DiaryService {
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         int stampListSize = 3;
-        List<Stamp> stamps = getStamps(requestDto);
+        List<Stamp> stamps = extractStamps(requestDto.getStamps());
         if (stamps.size() > stampListSize) {
             throw new CustomException(STAMP_LIST_SIZE_ERROR);
         }
 
-        List<DiaryStamp> diaryStamps = getDiaryStamps(stamps);
-        Pet pet = petRepository.findByPetName(requestDto.getPet().getPetName())
+        List<DiaryStamp> diaryStamps = makeDiaryStamps(stamps);
+        Pet pet = petRepository.findByPetNameAndOwner(requestDto.getPet().getPetName(), user)
                 .orElseThrow(() -> new CustomException(PET_NOT_FOUND));
         return getDiary(requestDto, user, diaryStamps, pet);
     }
@@ -73,13 +74,68 @@ public class DiaryServiceImpl implements DiaryService {
         return diaryRepository.getDiaryBriefInfoScroll(cursor, condition, pageRequest);
     }
 
+    @Override
+    @Transactional
+    public void update(Long diaryId, DiaryUpdateReqDto updateRequestDto) {
+
+        // TODO: 하드 코딩 변경
+        User user = userRepository.findByUsername("test")
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(() -> new CustomException(DIARY_NOT_FOUND));
+
+        Pet pet = updatePet(updateRequestDto, user);
+        List<DiaryStamp> newDiaryStamps = updateStamp(updateRequestDto, diary);
+        diary.updateDiary(updateRequestDto.getTitle(), updateRequestDto.getContent(), newDiaryStamps, pet);
+    }
+
+    // 누구의 일기인가요? 변경
+    private Pet updatePet(DiaryUpdateReqDto updateRequestDto, User user) {
+        Pet pet = null;
+        if (updateRequestDto.getPet() != null) {
+            pet = petRepository.findByPetNameAndOwner(updateRequestDto.getPet().getPetName(), user)
+                    .orElseThrow(() -> new CustomException(PET_NOT_FOUND));
+        }
+        return pet;
+    }
+
+    private List<DiaryStamp> updateStamp(DiaryUpdateReqDto updateRequestDto, Diary diary) {
+        // initialize oldStamps
+        List<DiaryStamp> oldDiaryStamps = diary.getDiaryStamps();
+        List<Stamp> oldStamps = new ArrayList<>();
+        for (DiaryStamp oldDiaryStamp : oldDiaryStamps) {
+            oldStamps.add(oldDiaryStamp.getStamp());
+        }
+
+        // 기존 스탬프 제거
+        if (updateRequestDto.getStamps() != null) {
+            if (!oldDiaryStamps.isEmpty()) {
+                DiaryStamp.removeDiaryStamp(oldDiaryStamps);
+                stampRepository.deleteAll(oldStamps);
+            }
+        }
+
+        // 새로운 스탬프 생성
+        int stampListSize = 3;
+        List<DiaryStamp> newDiaryStamps = null;
+        if (updateRequestDto.getStamps() != null) {
+            if (updateRequestDto.getStamps().size() > stampListSize) {
+                throw new CustomException(STAMP_LIST_SIZE_ERROR);
+            }
+            List<Stamp> newStamps = extractStamps(updateRequestDto.getStamps());
+            newDiaryStamps = makeDiaryStamps(newStamps);
+        }
+        return newDiaryStamps;
+    }
+
     private Diary getDiary(DiarySaveReqDto requestDto, User user, List<DiaryStamp> diaryStamps, Pet pet) {
         Diary diary = Diary.createDiary(user, pet, requestDto.getTitle(), requestDto.getContent(), diaryStamps);
         diaryRepository.save(diary);
         return diary;
     }
 
-    private List<DiaryStamp> getDiaryStamps(List<Stamp> stamps) {
+    private List<DiaryStamp> makeDiaryStamps(List<Stamp> stamps) {
         List<DiaryStamp> diaryStamps = new ArrayList<>();
         for (Stamp stamp : stamps) {
             DiaryStamp diarystamp = DiaryStamp.createDiaryStamp(stamp);
@@ -88,14 +144,14 @@ public class DiaryServiceImpl implements DiaryService {
         return diaryStamps;
     }
 
-    private List<Stamp> getStamps(DiarySaveReqDto requestDto) {
-        List<Stamp> stamps = new ArrayList<>();
-        for (Stamp stamp : requestDto.getStamps()) {
+    private List<Stamp> extractStamps(List<Stamp> stamps) {
+        List<Stamp> resStamps = new ArrayList<>();
+        for (Stamp stamp : stamps) {
             Stamp byStampType = stampRepository.findByStampType(stamp.getStampType())
                     .orElseThrow(() -> new CustomException(STAMP_NOT_FOUND));
-            stamps.add(byStampType);
+            resStamps.add(byStampType);
         }
-        return stamps;
+        return resStamps;
     }
 
 }
