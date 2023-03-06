@@ -111,13 +111,20 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public void delete(Long diaryId) {
+    public Diary delete(Long diaryId) {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new CustomException(DIARY_NOT_FOUND));
         if (diary.getIsDeleted()) {
             throw new CustomException(DIARY_NOT_FOUND);
         }
-        diary.deleteDiary();
+
+        // 스탬프 제거
+        List<DiaryStamp> diaryStamps = diary.getDiaryStamps();
+        if (!diaryStamps.isEmpty()) {
+            DiaryStamp.removeDiaryStamp(diaryStamps); // 해당 게시글의 DiaryStamp 목록에서 diaryStamp 삭제
+        }
+
+        return diary;
     }
 
 

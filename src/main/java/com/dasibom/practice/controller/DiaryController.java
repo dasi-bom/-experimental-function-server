@@ -4,6 +4,7 @@ import static com.dasibom.practice.exception.ErrorCode.FILE_NOT_EXIST_ERROR;
 
 import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
+import com.dasibom.practice.domain.DiaryImage;
 import com.dasibom.practice.domain.Pet;
 import com.dasibom.practice.domain.Response;
 import com.dasibom.practice.dto.DiaryBriefInfoDto;
@@ -13,9 +14,7 @@ import com.dasibom.practice.dto.DiaryUpdateReqDto;
 import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.service.DiaryService;
 import com.dasibom.practice.service.S3Service;
-import io.swagger.annotations.ApiParam;
 import java.util.List;
-import java.util.UUID;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -103,7 +102,14 @@ public class DiaryController {
 
     @DeleteMapping("/{diaryId}")
     public Response delete(@PathVariable("diaryId") long diaryId) {
-        diaryService.delete(diaryId);
+        Diary deletedDiary = diaryService.delete(diaryId);
+        // 이미지 제거
+        List<DiaryImage> images = deletedDiary.getImages();
+        if (!images.isEmpty()) {
+            s3Service.deletePostImages(images);
+        }
+        deletedDiary.deleteDiary();
+
         return new Response("OK", "일기 삭제에 성공했습니다");
     }
 

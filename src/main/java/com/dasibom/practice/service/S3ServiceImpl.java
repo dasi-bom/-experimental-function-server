@@ -6,6 +6,7 @@ import static com.dasibom.practice.exception.ErrorCode.INVALID_FILE_ERROR;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.dasibom.practice.domain.Diary;
@@ -18,6 +19,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -120,6 +122,15 @@ public class S3ServiceImpl implements S3Service {
             img.setDiary(diary);
 
             diaryImageRepository.save(img);
+        }
+    }
+
+    // 이미지 리스트 삭제
+    @Override
+    @Transactional
+    public void deletePostImages(List<DiaryImage> images) {
+        for (DiaryImage diaryImage : images) {
+            amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, diaryImage.getFileName()));
         }
     }
 
