@@ -36,7 +36,7 @@ public class DiaryDetailResDto {
     }
 
     private void initStampTypes(Diary entity) {
-        for (DiaryStamp diaryStamp : entity.getStamps()) {
+        for (DiaryStamp diaryStamp : entity.getDiaryStamps()) {
             this.stampTypes.add(diaryStamp.getStamp().getStampType().toString());
         }
     }
