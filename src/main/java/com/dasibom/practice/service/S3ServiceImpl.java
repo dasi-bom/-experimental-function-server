@@ -51,6 +51,23 @@ public class S3ServiceImpl implements S3Service {
         return fileNameList;
     }
 
+    @Override
+    public List<String> uploadImage_onlyFile(List<MultipartFile> multipartFile, String dirName) {
+
+        List<String> fileNameList = new ArrayList<>();
+        List<String> imageUrl = new ArrayList<>();
+
+        uploadS3(multipartFile, dirName, fileNameList, imageUrl);
+
+        try {
+            storeInfoInDb_onlyFile(imageUrl, fileNameList);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return fileNameList;
+    }
+
     // S3 업로드 로직
     private void uploadS3(List<MultipartFile> multipartFile, String dirName, List<String> fileNameList,
             List<String> imageUrl) {
@@ -82,6 +99,16 @@ public class S3ServiceImpl implements S3Service {
             img.setImgUrl(imageUrls.get(i));
             img.setFileName(fileNameList.get(i));
             img.setDiary(diary);
+
+            diaryImageRepository.save(img);
+        }
+    }
+
+    public void storeInfoInDb_onlyFile(List<String> imageUrls, List<String> fileNameList) throws IOException {
+        for (int i = 0; i < imageUrls.size(); i++) {
+            DiaryImage img = new DiaryImage();
+            img.setImgUrl(imageUrls.get(i));
+            img.setFileName(fileNameList.get(i));
 
             diaryImageRepository.save(img);
         }
