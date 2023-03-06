@@ -40,9 +40,18 @@ public class DiaryServiceImpl implements DiaryService {
     private final DiaryRepository diaryRepository;
     private final StampRepository stampRepository;
 
+    // diary ID 값 발급
+    public Long issueId() {
+        Diary lastDiary = diaryRepository.findFirstByOrderByIdDesc();
+        if (lastDiary == null) {
+            return (long) 1;
+        }
+        return (long) (lastDiary.getId() + 1);
+    }
+
     @Override
     @Transactional
-    public Diary save(DiarySaveReqDto requestDto) {
+    public Diary save(Long diaryId, DiarySaveReqDto requestDto) {
 
         // TODO: 하드 코딩 변경
         User user = userRepository.findByUsername("test")
@@ -57,7 +66,7 @@ public class DiaryServiceImpl implements DiaryService {
         List<DiaryStamp> diaryStamps = makeDiaryStamps(stamps);
         Pet pet = petRepository.findByPetNameAndOwner(requestDto.getPet().getPetName(), user)
                 .orElseThrow(() -> new CustomException(PET_NOT_FOUND));
-        return getDiary(requestDto, user, diaryStamps, pet);
+        return getDiary(diaryId, requestDto, user, diaryStamps, pet);
     }
 
     @Override
@@ -139,8 +148,8 @@ public class DiaryServiceImpl implements DiaryService {
         return newDiaryStamps;
     }
 
-    private Diary getDiary(DiarySaveReqDto requestDto, User user, List<DiaryStamp> diaryStamps, Pet pet) {
-        Diary diary = Diary.createDiary(user, pet, requestDto.getTitle(), requestDto.getContent(), diaryStamps);
+    private Diary getDiary(Long diaryId, DiarySaveReqDto requestDto, User user, List<DiaryStamp> diaryStamps, Pet pet) {
+        Diary diary = Diary.createDiary(diaryId, user, pet, requestDto.getTitle(), requestDto.getContent(), diaryStamps);
         diaryRepository.save(diary);
         return diary;
     }

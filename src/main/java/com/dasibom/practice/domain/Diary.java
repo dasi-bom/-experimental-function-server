@@ -8,8 +8,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -28,7 +26,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class Diary {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "diaryId")
     private Long id;
 
@@ -64,8 +61,9 @@ public class Diary {
         diaryStamp.setDiary(this);
     }
 
-    public static Diary createDiary(User user, Pet pet, String title, String content, List<DiaryStamp> stamps) {
+    public static Diary createDiary(Long diaryId, User user, Pet pet, String title, String content, List<DiaryStamp> stamps) {
         Diary diary = new Diary();
+        diary.setId(diaryId);
         diary.setAuthor(user);
         diary.setPet(pet);
         for (DiaryStamp stamp : stamps) {

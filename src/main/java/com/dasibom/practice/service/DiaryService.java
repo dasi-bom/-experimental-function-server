@@ -11,7 +11,9 @@ import org.springframework.data.domain.Slice;
 
 public interface DiaryService {
 
-    Diary save(DiarySaveReqDto requestDto);
+    Long issueId();
+
+    Diary save(Long diaryId, DiarySaveReqDto requestDto);
 
     DiaryDetailResDto getDetailedDiary(Long diaryId);
 

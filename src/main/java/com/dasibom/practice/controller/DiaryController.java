@@ -15,6 +15,7 @@ import com.dasibom.practice.service.DiaryService;
 import com.dasibom.practice.service.S3Service;
 import io.swagger.annotations.ApiParam;
 import java.util.List;
+import java.util.UUID;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,32 +44,40 @@ public class DiaryController {
     private final DiaryService diaryService;
     private final S3Service s3Service;
 
-    @PostMapping("/save/text")
-    public Response save_onlyText(@RequestBody @Valid DiarySaveReqDto requestDto) {
-        diaryService.save(requestDto);
+    @GetMapping("/issue/id")
+    public Response issueId() {
+        Long id = diaryService.issueId();
+        return new Response("OK", id.toString());
+    }
+
+    @PostMapping("/save/{diaryId}/text")
+    public Response save_onlyText(@PathVariable("diaryId") Long diaryId,
+            @RequestBody @Valid DiarySaveReqDto requestDto) {
+        diaryService.save(diaryId, requestDto);
         return new Response("OK", "일기 등록에 성공했습니다");
     }
 
-    @PostMapping(value = "/save/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Response save_onlyFile(@RequestPart(required = false) List<MultipartFile> multipartFile) {
+    @PostMapping(value = "/save/{diaryId}/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Response save_onlyFile(@PathVariable("diaryId") long diaryId,
+            @RequestPart(required = false) List<MultipartFile> multipartFile) {
         if (multipartFile == null) {
             throw new CustomException(FILE_NOT_EXIST_ERROR);
         }
-        s3Service.uploadImage_onlyFile(multipartFile, "Diary");
+        s3Service.uploadImage_onlyFile(multipartFile, "Diary", diaryId);
         return new Response("OK", "파일 업로드에 성공했습니다");
     }
 
-    @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Response save(@RequestPart @Valid DiarySaveReqDto requestDto,
-            @RequestPart(required = false) List<MultipartFile> multipartFile) {
-
-        Diary diary = diaryService.save(requestDto);
-        if (multipartFile != null) {
-            s3Service.uploadImage(multipartFile, "Diary", diary);
-        }
-
-        return new Response("OK", "일기 등록에 성공했습니다");
-    }
+//    @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+//    public Response save(@RequestPart @Valid DiarySaveReqDto requestDto,
+//            @RequestPart(required = false) List<MultipartFile> multipartFile) {
+//
+//        Diary diary = diaryService.save(requestDto);
+//        if (multipartFile != null) {
+//            s3Service.uploadImage(multipartFile, "Diary", diary);
+//        }
+//
+//        return new Response("OK", "일기 등록에 성공했습니다");
+//    }
 
     @GetMapping("/detail/{diaryId}")
     public DiaryDetailResDto getDetailedDiary(@PathVariable("diaryId") long diaryId) {
@@ -86,7 +95,8 @@ public class DiaryController {
     }
 
     @PatchMapping("/{diaryId}")
-    public Response update(@PathVariable("diaryId") long diaryId, @RequestBody @Valid DiaryUpdateReqDto updateRequestDto) {
+    public Response update(@PathVariable("diaryId") long diaryId,
+            @RequestBody @Valid DiaryUpdateReqDto updateRequestDto) {
         diaryService.update(diaryId, updateRequestDto);
         return new Response("OK", "일기 수정에 성공했습니다");
     }
