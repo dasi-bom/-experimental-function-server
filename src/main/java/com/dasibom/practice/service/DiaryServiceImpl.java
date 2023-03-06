@@ -90,6 +90,16 @@ public class DiaryServiceImpl implements DiaryService {
         diary.updateDiary(updateRequestDto.getTitle(), updateRequestDto.getContent(), newDiaryStamps, pet);
     }
 
+    @Override
+    @Transactional
+    public void delete(Long diaryId) {
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(() -> new CustomException(DIARY_NOT_FOUND));
+        diary.deleteDiary();
+//        diaryRepository.delete(diary);
+    }
+
+
     // 누구의 일기인가요? 변경
     private Pet updatePet(DiaryUpdateReqDto updateRequestDto, User user) {
         Pet pet = null;

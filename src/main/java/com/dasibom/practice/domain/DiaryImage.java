@@ -1,5 +1,6 @@
 package com.dasibom.practice.domain;
 
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,4 +28,14 @@ public class DiaryImage {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diaryId")
     private Diary diary;
+
+    public static void deleteImages(List<DiaryImage> images) {
+        if (!images.isEmpty()) {
+            for (DiaryImage image : images) {
+                image.setImgUrl(null);
+                image.setFileName(null);
+                image.setDiary(null);
+            }
+        }
+    }
 }

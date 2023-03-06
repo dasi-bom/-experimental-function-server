@@ -1,6 +1,7 @@
 package com.dasibom.practice.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -18,6 +19,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Getter
@@ -50,8 +52,12 @@ public class Diary {
     @CreationTimestamp
     private LocalDate createdAt;
 
-    @CreationTimestamp
+    @UpdateTimestamp
     private LocalDate updatedAt;
+
+    private Boolean isDeleted = false;
+
+    private LocalDateTime deleteAt;
 
     public void addDiaryStamp(DiaryStamp diaryStamp) {
         diaryStamps.add(diaryStamp);
@@ -71,7 +77,6 @@ public class Diary {
     }
 
     public void updateDiary(String title, String content, List<DiaryStamp> diaryStamps, Pet pet) {
-
         if (StringUtils.isNotBlank(title)) {
             this.title = title;
         }
@@ -86,5 +91,12 @@ public class Diary {
         if (pet != null) {
             this.pet = pet;
         }
+
+    }
+
+    public void deleteDiary() {
+        this.setIsDeleted(true);
+        this.setDeleteAt(LocalDateTime.now());
+        DiaryImage.deleteImages(this.getImages());
     }
 }

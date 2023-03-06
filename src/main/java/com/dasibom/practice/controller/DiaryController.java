@@ -23,6 +23,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -88,6 +89,12 @@ public class DiaryController {
     public Response update(@PathVariable("diaryId") long diaryId, @RequestBody @Valid DiaryUpdateReqDto updateRequestDto) {
         diaryService.update(diaryId, updateRequestDto);
         return new Response("OK", "일기 수정에 성공했습니다");
+    }
+
+    @DeleteMapping("/{diaryId}")
+    public Response delete(@PathVariable("diaryId") long diaryId) {
+        diaryService.delete(diaryId);
+        return new Response("OK", "일기 삭제에 성공했습니다");
     }
 
 }
