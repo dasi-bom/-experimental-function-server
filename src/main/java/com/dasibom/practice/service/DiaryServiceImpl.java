@@ -100,6 +100,9 @@ public class DiaryServiceImpl implements DiaryService {
 
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new CustomException(DIARY_NOT_FOUND));
+        if (diary.getIsDeleted()) {
+            throw new CustomException(DIARY_NOT_FOUND);
+        }
 
         Pet pet = updatePet(updateRequestDto, user);
         List<DiaryStamp> newDiaryStamps = updateStamp(updateRequestDto, diary);
@@ -111,8 +114,10 @@ public class DiaryServiceImpl implements DiaryService {
     public void delete(Long diaryId) {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new CustomException(DIARY_NOT_FOUND));
+        if (diary.getIsDeleted()) {
+            throw new CustomException(DIARY_NOT_FOUND);
+        }
         diary.deleteDiary();
-//        diaryRepository.delete(diary);
     }
 
 
