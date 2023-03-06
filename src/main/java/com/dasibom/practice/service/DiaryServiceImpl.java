@@ -50,7 +50,6 @@ public class DiaryServiceImpl implements DiaryService {
 
         int stampListSize = 3;
         List<Stamp> stamps = extractStamps(requestDto.getStamps());
-//        List<Stamp> stamps = extractStamps(requestDto);
         if (stamps.size() > stampListSize) {
             throw new CustomException(STAMP_LIST_SIZE_ERROR);
         }
@@ -138,16 +137,6 @@ public class DiaryServiceImpl implements DiaryService {
         }
         return diaryStamps;
     }
-
-//    private List<Stamp> getStamps(DiarySaveReqDto requestDto) {
-//        List<Stamp> stamps = new ArrayList<>();
-//        for (Stamp stamp : requestDto.getStamps()) {
-//            Stamp byStampType = stampRepository.findByStampType(stamp.getStampType())
-//                    .orElseThrow(() -> new CustomException(STAMP_NOT_FOUND));
-//            stamps.add(byStampType);
-//        }
-//        return stamps;
-//    }
 
     private List<Stamp> extractStamps(List<Stamp> stamps) {
         List<Stamp> resStamps = new ArrayList<>();
