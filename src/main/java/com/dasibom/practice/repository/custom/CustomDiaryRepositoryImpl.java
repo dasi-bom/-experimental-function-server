@@ -79,7 +79,7 @@ public class CustomDiaryRepositoryImpl implements CustomDiaryRepository {
 
     //동적 쿼리를 위한 BooleanExpression
     private BooleanExpression eqCursorId(Long cursorId) {
-        return (cursorId == null) ? null : diary.id.gt(cursorId);
+        return (cursorId == null) ? null : diary.id.lt(cursorId); // lt: 작다
     }
 
     // 제목에 keyword 포함되어있는지 필터링
