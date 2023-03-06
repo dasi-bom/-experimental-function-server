@@ -3,7 +3,7 @@ package com.dasibom.practice.dto;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.DiaryImage;
 import com.dasibom.practice.domain.DiaryStamp;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ public class DiaryDetailResDto {
     private final String petName;
     private final List<String> imgUrls = new ArrayList<>();
     private final List<String> stampTypes = new ArrayList<>();
-    private final LocalDate createdAt;
+    private final LocalDateTime createdAt;
 
     public DiaryDetailResDto(Diary entity) {
         this.title = entity.getTitle();
