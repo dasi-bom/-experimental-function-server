@@ -1,5 +1,6 @@
 package com.dasibom.practice.service;
 
+import static com.dasibom.practice.exception.ErrorCode.DIARY_ALREADY_EXIST_ERROR;
 import static com.dasibom.practice.exception.ErrorCode.DIARY_NOT_FOUND;
 import static com.dasibom.practice.exception.ErrorCode.PET_NOT_FOUND;
 import static com.dasibom.practice.exception.ErrorCode.STAMP_LIST_SIZE_ERROR;
@@ -23,6 +24,7 @@ import com.dasibom.practice.repository.StampRepository;
 import com.dasibom.practice.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +58,11 @@ public class DiaryServiceImpl implements DiaryService {
         // TODO: 하드 코딩 변경
         User user = userRepository.findByUsername("test")
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+
+        Optional<Diary> diary = diaryRepository.findById(diaryId);
+        if (diary.isPresent()) {
+            throw new CustomException(DIARY_ALREADY_EXIST_ERROR);
+        }
 
         int stampListSize = 3;
         List<Stamp> stamps = extractStamps(requestDto.getStamps());
