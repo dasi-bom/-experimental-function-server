@@ -56,7 +56,7 @@ public class DiaryServiceImpl implements DiaryService {
         }
 
         List<DiaryStamp> diaryStamps = getDiaryStamps(stamps);
-        Pet pet = petRepository.findByPetName(requestDto.getPet().getPetName())
+        Pet pet = petRepository.findByPetNameAndOwner(requestDto.getPet().getPetName(), user)
                 .orElseThrow(() -> new CustomException(PET_NOT_FOUND));
         return getDiary(requestDto, user, diaryStamps, pet);
     }

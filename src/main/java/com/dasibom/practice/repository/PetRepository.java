@@ -7,6 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PetRepository extends JpaRepository<Pet, Long> {
 
-    Optional<Pet> findByPetName(String petName);
     Optional<Pet> findByPetNameAndOwner(String petName, User owner);
 }
