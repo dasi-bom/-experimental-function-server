@@ -25,6 +25,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleAllException(Exception ex) {
         log.error("handleAllException throw Exception : {}", ex.getClass().getName());
+        log.error(ex.getMessage());
         return ErrorResponse.toResponseEntity(INTERNAL_SERVER_ERROR);
     }
 

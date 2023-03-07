@@ -21,6 +21,7 @@ public enum ErrorCode {
     DIARY_NOT_FOUND(HttpStatus.NOT_FOUND, "일기를 찾을 수 없습니다"),
     PET_NOT_FOUND(HttpStatus.NOT_FOUND, "반려 동물을 찾을 수 없습니다"),
     STAMP_NOT_FOUND(HttpStatus.NOT_FOUND, "스탬프를 찾을 수 없습니다"),
+    RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "기록을 찾을 수 없습니다. 임시보호가 종료되지 않았습니다."),
 
     /* 500 INTERNAL_SERVER_ERROR : 서버 에러 */
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 에러가 발생했습니다."),
