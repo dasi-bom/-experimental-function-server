@@ -3,6 +3,7 @@ package com.dasibom.practice.service;
 import static com.dasibom.practice.exception.ErrorCode.DIARY_ALREADY_EXIST_ERROR;
 import static com.dasibom.practice.exception.ErrorCode.DIARY_NOT_FOUND;
 import static com.dasibom.practice.exception.ErrorCode.PET_NOT_FOUND;
+import static com.dasibom.practice.exception.ErrorCode.RECORD_NOT_FOUND;
 import static com.dasibom.practice.exception.ErrorCode.STAMP_LIST_SIZE_ERROR;
 import static com.dasibom.practice.exception.ErrorCode.STAMP_NOT_FOUND;
 import static com.dasibom.practice.exception.ErrorCode.USER_NOT_FOUND;
@@ -11,7 +12,9 @@ import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.DiaryStamp;
 import com.dasibom.practice.domain.Pet;
+import com.dasibom.practice.domain.Record;
 import com.dasibom.practice.domain.Stamp;
+import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
 import com.dasibom.practice.dto.DiaryBriefResDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
@@ -20,6 +23,7 @@ import com.dasibom.practice.dto.DiaryUpdateReqDto;
 import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.repository.DiaryRepository;
 import com.dasibom.practice.repository.PetRepository;
+import com.dasibom.practice.repository.RecordRepository;
 import com.dasibom.practice.repository.StampRepository;
 import com.dasibom.practice.repository.UserRepository;
 import java.util.ArrayList;
@@ -41,6 +45,8 @@ public class DiaryServiceImpl implements DiaryService {
     private final PetRepository petRepository;
     private final DiaryRepository diaryRepository;
     private final StampRepository stampRepository;
+
+    private final RecordRepository recordRepository;
 
     // diary ID 값 발급
     public Long issueId() {
@@ -133,12 +139,21 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public List<DiaryDetailResDto> getAgainDiaryList(DiaryReadCondition condition) {
-        return diaryRepository.getDiaryDetailList(condition);
+    public List<DiaryDetailResDto> getRecordList(StampType stampType, String petName, User user) {
+        Pet pet = petRepository.findByPetNameAndOwner(petName, user)
+                .orElseThrow(() -> new CustomException(PET_NOT_FOUND));
+        List<DiaryDetailResDto> result = new ArrayList<>();
+        Record record = recordRepository.findByPetAndStampType(pet, stampType)
+                .orElseThrow(() -> new CustomException(RECORD_NOT_FOUND));
+
+        for (Diary diary : record.getDiaries()) {
+            result.add(new DiaryDetailResDto(diary));
+        }
+        return result;
     }
 
     // 누구의 일기인가요? 변경
-    private Pet findPet(Pet reqPet , User user) {
+    private Pet findPet(Pet reqPet, User user) {
         Pet pet = null;
         if (reqPet != null) {
             pet = petRepository.findByPetNameAndOwner(reqPet.getPetName(), user)
@@ -146,14 +161,6 @@ public class DiaryServiceImpl implements DiaryService {
         }
         return pet;
     }
-//    private Pet updatePet(DiaryUpdateReqDto updateRequestDto, User user) {
-//        Pet pet = null;
-//        if (updateRequestDto.getPet() != null) {
-//            pet = petRepository.findByPetNameAndOwner(updateRequestDto.getPet().getPetName(), user)
-//                    .orElseThrow(() -> new CustomException(PET_NOT_FOUND));
-//        }
-//        return pet;
-//    }
 
     private List<DiaryStamp> updateStamp(DiaryUpdateReqDto updateRequestDto, Diary diary) {
         // initialize oldStamps
@@ -185,7 +192,8 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     private Diary getDiary(Long diaryId, DiarySaveReqDto requestDto, User user, List<DiaryStamp> diaryStamps, Pet pet) {
-        Diary diary = Diary.createDiary(diaryId, user, pet, requestDto.getTitle(), requestDto.getContent(), diaryStamps);
+        Diary diary = Diary.createDiary(diaryId, user, pet, requestDto.getTitle(), requestDto.getContent(),
+                diaryStamps);
         diaryRepository.save(diary);
         return diary;
     }

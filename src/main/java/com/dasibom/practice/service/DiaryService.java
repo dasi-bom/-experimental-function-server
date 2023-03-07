@@ -2,6 +2,8 @@ package com.dasibom.practice.service;
 
 import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
+import com.dasibom.practice.domain.StampType;
+import com.dasibom.practice.domain.User;
 import com.dasibom.practice.dto.DiaryBriefResDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiarySaveReqDto;
@@ -24,5 +26,5 @@ public interface DiaryService {
 
     Diary delete(Long diaryId);
 
-    List<DiaryDetailResDto> getAgainDiaryList(DiaryReadCondition condition);
+    List<DiaryDetailResDto> getRecordList(StampType stampType, String petName, User user);
 }

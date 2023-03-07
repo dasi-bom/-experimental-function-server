@@ -17,6 +17,7 @@ import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.repository.UserRepository;
 import com.dasibom.practice.service.DiaryService;
 import com.dasibom.practice.service.S3Service;
+import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -120,14 +121,15 @@ public class DiaryController {
         return new Response("OK", "일기 삭제에 성공했습니다");
     }
 
-    @GetMapping("/list/again")
-    public List<DiaryDetailResDto> againList(@RequestParam StampType stampType, @RequestParam String petName) {
+    @ApiOperation(value = "다시 보기", notes = "스탬프 별 다시보기")
+    @GetMapping("/list/record")
+    public List<DiaryDetailResDto> recordList(@RequestParam StampType stampType, @RequestParam String petName) {
 
         // TODO: 하드 코딩 변경
         User user = userRepository.findByUsername("test")
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        return diaryService.getAgainDiaryList(new DiaryReadCondition(stampType, user, petName)); // 펫 & 스탬프 별 일기 조회
+        return diaryService.getRecordList(stampType, petName, user);
     }
 
 }
