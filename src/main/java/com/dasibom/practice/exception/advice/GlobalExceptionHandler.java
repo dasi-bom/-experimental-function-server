@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -48,5 +49,12 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleCustomException(CustomException ex) {
         log.error("handleCustomException throw CustomException : {}", ex.getErrorCode());
         return ErrorResponse.toResponseEntity(ex.getErrorCode());
+    }
+
+    // CustomException 을 상속받은 클래스가 예외를 발생 시킬 시, Catch 하여 ErrorResponse 를 반환한다.
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    protected ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
+        log.error("handleMissingServletRequestParameterException throw CustomException : {}", ex.getMessage());
+        return ErrorResponse.toResponseEntity(METHOD_ARG_NOT_VALID, "필수 파라미터가 누락되었습니다.");
     }
 }
