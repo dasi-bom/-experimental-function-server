@@ -1,17 +1,21 @@
 package com.dasibom.practice.controller;
 
 import static com.dasibom.practice.exception.ErrorCode.FILE_NOT_EXIST_ERROR;
+import static com.dasibom.practice.exception.ErrorCode.USER_NOT_FOUND;
 
 import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.DiaryImage;
 import com.dasibom.practice.domain.Pet;
 import com.dasibom.practice.domain.Response;
+import com.dasibom.practice.domain.StampType;
+import com.dasibom.practice.domain.User;
 import com.dasibom.practice.dto.DiaryBriefResDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiarySaveReqDto;
 import com.dasibom.practice.dto.DiaryUpdateReqDto;
 import com.dasibom.practice.exception.CustomException;
+import com.dasibom.practice.repository.UserRepository;
 import com.dasibom.practice.service.DiaryService;
 import com.dasibom.practice.service.S3Service;
 import java.util.List;
@@ -42,6 +46,9 @@ public class DiaryController {
 
     private final DiaryService diaryService;
     private final S3Service s3Service;
+
+    // TODO: 로그인 기능 개발 이후 제거
+    private final UserRepository userRepository;
 
     @GetMapping("/issue/id")
     public Response issueId() {
@@ -111,6 +118,16 @@ public class DiaryController {
         deletedDiary.deleteDiary();
 
         return new Response("OK", "일기 삭제에 성공했습니다");
+    }
+
+    @GetMapping("/list/again")
+    public List<DiaryDetailResDto> againList(StampType stampType) {
+
+        // TODO: 하드 코딩 변경
+        User user = userRepository.findByUsername("test")
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+
+        return diaryService.getAgainDiaryList(new DiaryReadCondition(stampType, user)); // 스탬프 별 일기 조회
     }
 
 }

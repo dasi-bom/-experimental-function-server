@@ -130,6 +130,12 @@ public class DiaryServiceImpl implements DiaryService {
         return diary;
     }
 
+    @Override
+    @Transactional
+    public List<DiaryDetailResDto> getAgainDiaryList(DiaryReadCondition condition) {
+        return diaryRepository.getDiaryDetailList(condition);
+    }
+
 
     // 누구의 일기인가요? 변경
     private Pet updatePet(DiaryUpdateReqDto updateRequestDto, User user) {

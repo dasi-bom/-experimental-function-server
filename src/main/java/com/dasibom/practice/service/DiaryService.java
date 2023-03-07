@@ -6,6 +6,7 @@ import com.dasibom.practice.dto.DiaryBriefResDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiarySaveReqDto;
 import com.dasibom.practice.dto.DiaryUpdateReqDto;
+import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
@@ -23,4 +24,5 @@ public interface DiaryService {
 
     Diary delete(Long diaryId);
 
+    List<DiaryDetailResDto> getAgainDiaryList(DiaryReadCondition condition);
 }
