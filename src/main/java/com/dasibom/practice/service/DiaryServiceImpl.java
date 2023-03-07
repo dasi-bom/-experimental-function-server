@@ -81,6 +81,9 @@ public class DiaryServiceImpl implements DiaryService {
     public DiaryDetailResDto getDetailedDiary(Long diaryId) {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new CustomException(DIARY_NOT_FOUND));
+        if (diary.getIsDeleted()) {
+            throw new CustomException(DIARY_NOT_FOUND);
+        }
         return new DiaryDetailResDto(diary);
     }
 
