@@ -1,10 +1,8 @@
 package com.dasibom.practice.domain;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,6 +36,9 @@ public class Pet {
     private LocalDate protectionStartedAt;
 
     private LocalDate protectionEndedAt;
+
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL)
+    private List<Record> record = new ArrayList<>();
 
     public void updateProtectionEndedAt() {
         protectionEndedAt = LocalDate.now();
