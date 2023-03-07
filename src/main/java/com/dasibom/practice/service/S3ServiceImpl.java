@@ -1,21 +1,25 @@
 package com.dasibom.practice.service;
 
+import static com.dasibom.practice.exception.ErrorCode.DIARY_NOT_FOUND;
 import static com.dasibom.practice.exception.ErrorCode.FILE_CAN_NOT_UPLOAD;
 import static com.dasibom.practice.exception.ErrorCode.INVALID_FILE_ERROR;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.DiaryImage;
 import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.repository.DiaryImageRepository;
+import com.dasibom.practice.repository.DiaryRepository;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +33,7 @@ public class S3ServiceImpl implements S3Service {
 
     private final AmazonS3Client amazonS3Client;
     private final DiaryImageRepository diaryImageRepository;
+    private final DiaryRepository diaryRepository;
 
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
@@ -52,7 +57,7 @@ public class S3ServiceImpl implements S3Service {
     }
 
     @Override
-    public List<String> uploadImage_onlyFile(List<MultipartFile> multipartFile, String dirName) {
+    public List<String> uploadImage_onlyFile(List<MultipartFile> multipartFile, String dirName, Long diaryId) {
 
         List<String> fileNameList = new ArrayList<>();
         List<String> imageUrl = new ArrayList<>();
@@ -60,7 +65,7 @@ public class S3ServiceImpl implements S3Service {
         uploadS3(multipartFile, dirName, fileNameList, imageUrl);
 
         try {
-            storeInfoInDb_onlyFile(imageUrl, fileNameList);
+            storeInfoInDb_onlyFile(imageUrl, fileNameList, diaryId);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -104,13 +109,28 @@ public class S3ServiceImpl implements S3Service {
         }
     }
 
-    public void storeInfoInDb_onlyFile(List<String> imageUrls, List<String> fileNameList) throws IOException {
+    public void storeInfoInDb_onlyFile(List<String> imageUrls, List<String> fileNameList, Long diaryId) throws IOException {
         for (int i = 0; i < imageUrls.size(); i++) {
             DiaryImage img = new DiaryImage();
             img.setImgUrl(imageUrls.get(i));
             img.setFileName(fileNameList.get(i));
+            Diary diary = diaryRepository.findById(diaryId)
+                    .orElseThrow(() -> new CustomException(DIARY_NOT_FOUND));
+            if (diary.getIsDeleted()) {
+                throw new CustomException(DIARY_NOT_FOUND);
+            }
+            img.setDiary(diary);
 
             diaryImageRepository.save(img);
+        }
+    }
+
+    // 이미지 리스트 삭제
+    @Override
+    @Transactional
+    public void deletePostImages(List<DiaryImage> images) {
+        for (DiaryImage diaryImage : images) {
+            amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, diaryImage.getFileName()));
         }
     }
 

@@ -1,14 +1,12 @@
 package com.dasibom.practice.domain;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,6 +16,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Getter
@@ -26,7 +25,6 @@ import org.hibernate.annotations.CreationTimestamp;
 public class Diary {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "diaryId")
     private Long id;
 
@@ -48,18 +46,23 @@ public class Diary {
     private String content;
 
     @CreationTimestamp
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
-    @CreationTimestamp
-    private LocalDate updatedAt;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    private Boolean isDeleted = false;
+
+    private LocalDateTime deleteAt;
 
     public void addDiaryStamp(DiaryStamp diaryStamp) {
         diaryStamps.add(diaryStamp);
         diaryStamp.setDiary(this);
     }
 
-    public static Diary createDiary(User user, Pet pet, String title, String content, List<DiaryStamp> stamps) {
+    public static Diary createDiary(Long diaryId, User user, Pet pet, String title, String content, List<DiaryStamp> stamps) {
         Diary diary = new Diary();
+        diary.setId(diaryId);
         diary.setAuthor(user);
         diary.setPet(pet);
         for (DiaryStamp stamp : stamps) {
@@ -71,7 +74,6 @@ public class Diary {
     }
 
     public void updateDiary(String title, String content, List<DiaryStamp> diaryStamps, Pet pet) {
-
         if (StringUtils.isNotBlank(title)) {
             this.title = title;
         }
@@ -86,5 +88,12 @@ public class Diary {
         if (pet != null) {
             this.pet = pet;
         }
+
+    }
+
+    public void deleteDiary() {
+        this.setIsDeleted(true);
+        this.setDeleteAt(LocalDateTime.now());
+        DiaryImage.deleteImages(this.getImages());
     }
 }

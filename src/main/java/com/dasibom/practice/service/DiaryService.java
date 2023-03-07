@@ -11,12 +11,16 @@ import org.springframework.data.domain.Slice;
 
 public interface DiaryService {
 
-    Diary save(DiarySaveReqDto requestDto);
+    Long issueId();
+
+    Diary save(Long diaryId, DiarySaveReqDto requestDto);
 
     DiaryDetailResDto getDetailedDiary(Long diaryId);
 
     Slice<DiaryBriefInfoDto> getDiaryList(Long cursor, DiaryReadCondition condition, Pageable pageRequest);
 
     void update(Long diaryId, DiaryUpdateReqDto updateRequestDto);
+
+    Diary delete(Long diaryId);
 
 }
