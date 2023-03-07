@@ -51,7 +51,7 @@ public class GlobalExceptionHandler {
         return ErrorResponse.toResponseEntity(ex.getErrorCode());
     }
 
-    // CustomException 을 상속받은 클래스가 예외를 발생 시킬 시, Catch 하여 ErrorResponse 를 반환한다.
+    // 필수 파라미터 누락 시 Catch
     @ExceptionHandler(MissingServletRequestParameterException.class)
     protected ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
         log.error("handleMissingServletRequestParameterException throw CustomException : {}", ex.getMessage());
