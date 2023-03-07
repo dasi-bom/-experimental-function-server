@@ -4,6 +4,7 @@ import static com.dasibom.practice.domain.QDiary.diary;
 
 import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
+import com.dasibom.practice.domain.Pet;
 import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
 import com.dasibom.practice.dto.DiaryBriefResDto;
@@ -70,6 +71,7 @@ public class CustomDiaryRepositoryImpl implements CustomDiaryRepository {
                 .from(diary)
                 .where(
                         eqUser(condition.getUser()), // 유저 별 조회
+                        eqPet(condition.getPetName()), // 펫 별 조회
                         eqStamp(condition.getStampType()), // 스탬프 별 조회
                         eqIsDeleted(condition.getIsDeleted()) // 삭제되지 않은 일기만 조회
                 )
@@ -128,6 +130,11 @@ public class CustomDiaryRepositoryImpl implements CustomDiaryRepository {
     // 유저 필터링
     private BooleanExpression eqUser(User user) {
         return (user == null) ? null :diary.author.eq(user);
+    }
+
+    // 펫 필터링
+    private BooleanExpression eqPet(String petName) {
+        return (petName == null) ? null :diary.pet.petName.eq(petName);
     }
 
     // 스탬프 필터링

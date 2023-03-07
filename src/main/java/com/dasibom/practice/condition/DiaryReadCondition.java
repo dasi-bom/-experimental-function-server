@@ -8,6 +8,7 @@ import lombok.Data;
 public class DiaryReadCondition {
 
     private User user; // 작성자
+    private String petName;
 
     private String searchKeyword; // 검색 키워드
 
@@ -27,8 +28,9 @@ public class DiaryReadCondition {
     }
 
     // 스탬프 별 (내가 쓴) 일기 조회
-    public DiaryReadCondition(StampType stampType, User user) {
+    public DiaryReadCondition(StampType stampType, User user, String petName) {
         this.user = user;
+        this.petName = petName;
         this.stampType = stampType;
         this.isDeleted = false;
     }

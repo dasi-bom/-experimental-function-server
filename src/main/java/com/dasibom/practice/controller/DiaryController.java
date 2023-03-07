@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -91,7 +92,7 @@ public class DiaryController {
     }
 
     @GetMapping("/list")
-    public Slice<DiaryBriefResDto> list(Long cursor, String searchKeyword, Pet pet,
+    public Slice<DiaryBriefResDto> list(Long cursor, String searchKeyword,
             @PageableDefault(size = 5, sort = "createAt") Pageable pageRequest) {
         if (StringUtils.hasText(searchKeyword)) {
             return diaryService.getDiaryList(cursor, new DiaryReadCondition(searchKeyword),
@@ -121,13 +122,13 @@ public class DiaryController {
     }
 
     @GetMapping("/list/again")
-    public List<DiaryDetailResDto> againList(StampType stampType) {
+    public List<DiaryDetailResDto> againList(@RequestParam StampType stampType, @RequestParam String petName) {
 
         // TODO: 하드 코딩 변경
         User user = userRepository.findByUsername("test")
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        return diaryService.getAgainDiaryList(new DiaryReadCondition(stampType, user)); // 스탬프 별 일기 조회
+        return diaryService.getAgainDiaryList(new DiaryReadCondition(stampType, user, petName)); // 펫 & 스탬프 별 일기 조회
     }
 
 }
