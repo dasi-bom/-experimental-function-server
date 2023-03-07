@@ -1,6 +1,7 @@
 package com.dasibom.practice.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,4 +38,8 @@ public class Pet {
     private LocalDate protectionStartedAt;
 
     private LocalDate protectionEndedAt;
+
+    public void updateProtectionEndedAt() {
+        protectionEndedAt = LocalDate.now();
+    }
 }

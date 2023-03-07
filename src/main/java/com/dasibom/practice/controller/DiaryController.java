@@ -6,7 +6,6 @@ import static com.dasibom.practice.exception.ErrorCode.USER_NOT_FOUND;
 import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.DiaryImage;
-import com.dasibom.practice.domain.Pet;
 import com.dasibom.practice.domain.Response;
 import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;

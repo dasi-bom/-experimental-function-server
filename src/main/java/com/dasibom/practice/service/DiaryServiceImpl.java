@@ -107,7 +107,8 @@ public class DiaryServiceImpl implements DiaryService {
             throw new CustomException(DIARY_NOT_FOUND);
         }
 
-        Pet pet = updatePet(updateRequestDto, user);
+        Pet pet = findPet(updateRequestDto.getPet(), user);
+//        Pet pet = updatePet(updateRequestDto, user);
         List<DiaryStamp> newDiaryStamps = updateStamp(updateRequestDto, diary);
         diary.updateDiary(updateRequestDto.getTitle(), updateRequestDto.getContent(), newDiaryStamps, pet);
     }
@@ -136,16 +137,23 @@ public class DiaryServiceImpl implements DiaryService {
         return diaryRepository.getDiaryDetailList(condition);
     }
 
-
     // 누구의 일기인가요? 변경
-    private Pet updatePet(DiaryUpdateReqDto updateRequestDto, User user) {
+    private Pet findPet(Pet reqPet , User user) {
         Pet pet = null;
-        if (updateRequestDto.getPet() != null) {
-            pet = petRepository.findByPetNameAndOwner(updateRequestDto.getPet().getPetName(), user)
+        if (reqPet != null) {
+            pet = petRepository.findByPetNameAndOwner(reqPet.getPetName(), user)
                     .orElseThrow(() -> new CustomException(PET_NOT_FOUND));
         }
         return pet;
     }
+//    private Pet updatePet(DiaryUpdateReqDto updateRequestDto, User user) {
+//        Pet pet = null;
+//        if (updateRequestDto.getPet() != null) {
+//            pet = petRepository.findByPetNameAndOwner(updateRequestDto.getPet().getPetName(), user)
+//                    .orElseThrow(() -> new CustomException(PET_NOT_FOUND));
+//        }
+//        return pet;
+//    }
 
     private List<DiaryStamp> updateStamp(DiaryUpdateReqDto updateRequestDto, Diary diary) {
         // initialize oldStamps
