@@ -13,7 +13,7 @@ import com.dasibom.practice.domain.DiaryStamp;
 import com.dasibom.practice.domain.Pet;
 import com.dasibom.practice.domain.Stamp;
 import com.dasibom.practice.domain.User;
-import com.dasibom.practice.dto.DiaryBriefInfoDto;
+import com.dasibom.practice.dto.DiaryBriefResDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiarySaveReqDto;
 import com.dasibom.practice.dto.DiaryUpdateReqDto;
@@ -89,7 +89,7 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public Slice<DiaryBriefInfoDto> getDiaryList(Long cursor, DiaryReadCondition condition, Pageable pageRequest) {
+    public Slice<DiaryBriefResDto> getDiaryList(Long cursor, DiaryReadCondition condition, Pageable pageRequest) {
         return diaryRepository.getDiaryBriefInfoScroll(cursor, condition, pageRequest);
     }
 

@@ -4,8 +4,7 @@ import static com.dasibom.practice.domain.QDiary.diary;
 
 import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
-import com.dasibom.practice.domain.Pet;
-import com.dasibom.practice.dto.DiaryBriefInfoDto;
+import com.dasibom.practice.dto.DiaryBriefResDto;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -29,7 +28,7 @@ public class CustomDiaryRepositoryImpl implements CustomDiaryRepository {
 
     // 게시글 조회 및 검색
     @Override
-    public Slice<DiaryBriefInfoDto> getDiaryBriefInfoScroll(Long cursorId, DiaryReadCondition condition,
+    public Slice<DiaryBriefResDto> getDiaryBriefInfoScroll(Long cursorId, DiaryReadCondition condition,
             Pageable pageable) {
 
         List<Diary> diaryList = queryFactory
@@ -45,9 +44,9 @@ public class CustomDiaryRepositoryImpl implements CustomDiaryRepository {
                 .orderBy(sortDiaryList(pageable)) // 최신순 정렬
                 .fetch();
 
-        List<DiaryBriefInfoDto> briefDiaryInfos = new ArrayList<>();
+        List<DiaryBriefResDto> briefDiaryInfos = new ArrayList<>();
         for (Diary diary : diaryList) {
-            briefDiaryInfos.add(new DiaryBriefInfoDto(diary));
+            briefDiaryInfos.add(new DiaryBriefResDto(diary));
         }
 
         boolean hasNext = false;

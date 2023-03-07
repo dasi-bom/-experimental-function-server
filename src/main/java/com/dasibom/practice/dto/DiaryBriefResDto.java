@@ -12,7 +12,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DiaryBriefInfoDto {
+public class DiaryBriefResDto {
 
     private Long diaryId;
     private String petName;
@@ -21,7 +21,7 @@ public class DiaryBriefInfoDto {
     private String author;
     private String createdAt;
 
-    public DiaryBriefInfoDto(Diary diary) {
+    public DiaryBriefResDto(Diary diary) {
         this.diaryId = diary.getId();
         this.petName = diary.getPet().getPetName();
         this.title = diary.getTitle();
