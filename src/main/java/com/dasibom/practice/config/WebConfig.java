@@ -7,17 +7,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    public static final String ALLOWED_METHOD_NAMES = "GET,POST,HEAD,DELETE,PATCH,OPTIONS";
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowCredentials(true)
+//                .allowCredentials(true)
                 .allowedOrigins(
                         "http://localhost:3000",
                         "https://localhost:3000",
                         "http://localhost:8080",
                         "https://localhost:8080"
                 )
-                .allowedMethods("*")
+                .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
                 .allowedHeaders("*");
     }
 

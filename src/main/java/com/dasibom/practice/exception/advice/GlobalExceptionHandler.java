@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -24,6 +25,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleAllException(Exception ex) {
         log.error("handleAllException throw Exception : {}", ex.getClass().getName());
+        log.error(ex.getMessage());
         return ErrorResponse.toResponseEntity(INTERNAL_SERVER_ERROR);
     }
 
@@ -48,5 +50,12 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleCustomException(CustomException ex) {
         log.error("handleCustomException throw CustomException : {}", ex.getErrorCode());
         return ErrorResponse.toResponseEntity(ex.getErrorCode());
+    }
+
+    // 필수 파라미터 누락 시 Catch
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    protected ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
+        log.error("handleMissingServletRequestParameterException throw CustomException : {}", ex.getMessage());
+        return ErrorResponse.toResponseEntity(METHOD_ARG_NOT_VALID, "필수 파라미터가 누락되었습니다.");
     }
 }

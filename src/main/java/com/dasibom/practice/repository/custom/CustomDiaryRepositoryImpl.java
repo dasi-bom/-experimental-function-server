@@ -5,10 +5,14 @@ import static com.dasibom.practice.domain.QDiary.diary;
 import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.Pet;
-import com.dasibom.practice.dto.DiaryBriefInfoDto;
+import com.dasibom.practice.domain.StampType;
+import com.dasibom.practice.domain.User;
+import com.dasibom.practice.dto.DiaryBriefResDto;
+import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +33,7 @@ public class CustomDiaryRepositoryImpl implements CustomDiaryRepository {
 
     // 게시글 조회 및 검색
     @Override
-    public Slice<DiaryBriefInfoDto> getDiaryBriefInfoScroll(Long cursorId, DiaryReadCondition condition,
+    public Slice<DiaryBriefResDto> getDiaryBriefInfoScroll(Long cursorId, DiaryReadCondition condition,
             Pageable pageable) {
 
         List<Diary> diaryList = queryFactory
@@ -45,9 +49,9 @@ public class CustomDiaryRepositoryImpl implements CustomDiaryRepository {
                 .orderBy(sortDiaryList(pageable)) // 최신순 정렬
                 .fetch();
 
-        List<DiaryBriefInfoDto> briefDiaryInfos = new ArrayList<>();
+        List<DiaryBriefResDto> briefDiaryInfos = new ArrayList<>();
         for (Diary diary : diaryList) {
-            briefDiaryInfos.add(new DiaryBriefInfoDto(diary));
+            briefDiaryInfos.add(new DiaryBriefResDto(diary));
         }
 
         boolean hasNext = false;
@@ -56,6 +60,31 @@ public class CustomDiaryRepositoryImpl implements CustomDiaryRepository {
             hasNext = true;
         }
         return new SliceImpl<>(briefDiaryInfos, pageable, hasNext);
+    }
+
+    // 스탬프 별 조회
+    @Override
+    public List<DiaryDetailResDto> getDiaryDetailList(DiaryReadCondition condition) {
+        int limitSize = 3;
+        List<Diary> diaryList = queryFactory
+                .select(diary)
+                .from(diary)
+                .where(
+                        eqUser(condition.getUser()), // 유저 별 조회
+                        eqPet(condition.getPetName()), // 펫 별 조회
+                        eqStamp(condition.getStampType()), // 스탬프 별 조회
+                        eqIsDeleted(condition.getIsDeleted()) // 삭제되지 않은 일기만 조회
+                )
+                .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc()) // 랜덤으로 조회
+                .limit(limitSize)
+                .fetch();
+
+        List<DiaryDetailResDto> detailDiaryInfos = new ArrayList<>();
+        for (Diary diary : diaryList) {
+            detailDiaryInfos.add(new DiaryDetailResDto(diary));
+        }
+
+        return detailDiaryInfos;
     }
 
     // 특정 기준 정렬
@@ -96,6 +125,21 @@ public class CustomDiaryRepositoryImpl implements CustomDiaryRepository {
     // 내용에 keyword 포함되어있는지 필터링
     private BooleanExpression eqContent(String keyword) {
         return (keyword == null) ? null : diary.content.contains(keyword);
+    }
+
+    // 유저 필터링
+    private BooleanExpression eqUser(User user) {
+        return (user == null) ? null :diary.author.eq(user);
+    }
+
+    // 펫 필터링
+    private BooleanExpression eqPet(String petName) {
+        return (petName == null) ? null :diary.pet.petName.eq(petName);
+    }
+
+    // 스탬프 필터링
+    private BooleanExpression eqStamp(StampType stampType) {
+        return (stampType == null) ? null :diary.diaryStamps.any().stamp.stampType.eq(stampType);
     }
 
 }

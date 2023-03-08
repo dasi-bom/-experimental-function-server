@@ -55,6 +55,10 @@ public class Diary {
 
     private LocalDateTime deleteAt;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "recordId")
+    private Record record;
+
     public void addDiaryStamp(DiaryStamp diaryStamp) {
         diaryStamps.add(diaryStamp);
         diaryStamp.setDiary(this);

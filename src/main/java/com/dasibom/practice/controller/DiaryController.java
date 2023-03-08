@@ -1,19 +1,23 @@
 package com.dasibom.practice.controller;
 
 import static com.dasibom.practice.exception.ErrorCode.FILE_NOT_EXIST_ERROR;
+import static com.dasibom.practice.exception.ErrorCode.USER_NOT_FOUND;
 
 import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.DiaryImage;
-import com.dasibom.practice.domain.Pet;
 import com.dasibom.practice.domain.Response;
-import com.dasibom.practice.dto.DiaryBriefInfoDto;
+import com.dasibom.practice.domain.StampType;
+import com.dasibom.practice.domain.User;
+import com.dasibom.practice.dto.DiaryBriefResDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiarySaveReqDto;
 import com.dasibom.practice.dto.DiaryUpdateReqDto;
 import com.dasibom.practice.exception.CustomException;
+import com.dasibom.practice.repository.UserRepository;
 import com.dasibom.practice.service.DiaryService;
 import com.dasibom.practice.service.S3Service;
+import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +34,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,6 +47,9 @@ public class DiaryController {
 
     private final DiaryService diaryService;
     private final S3Service s3Service;
+
+    // TODO: 로그인 기능 개발 이후 제거
+    private final UserRepository userRepository;
 
     @GetMapping("/issue/id")
     public Response issueId() {
@@ -84,7 +92,7 @@ public class DiaryController {
     }
 
     @GetMapping("/list")
-    public Slice<DiaryBriefInfoDto> list(Long cursor, String searchKeyword, Pet pet,
+    public Slice<DiaryBriefResDto> list(Long cursor, String searchKeyword,
             @PageableDefault(size = 5, sort = "createAt") Pageable pageRequest) {
         if (StringUtils.hasText(searchKeyword)) {
             return diaryService.getDiaryList(cursor, new DiaryReadCondition(searchKeyword),
@@ -111,6 +119,17 @@ public class DiaryController {
         deletedDiary.deleteDiary();
 
         return new Response("OK", "일기 삭제에 성공했습니다");
+    }
+
+    @ApiOperation(value = "다시 보기", notes = "스탬프 별 다시보기")
+    @GetMapping("/list/record")
+    public List<DiaryDetailResDto> recordList(@RequestParam StampType stampType, @RequestParam String petName) {
+
+        // TODO: 하드 코딩 변경
+        User user = userRepository.findByUsername("test")
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+
+        return diaryService.getRecordList(stampType, petName, user);
     }
 
 }
