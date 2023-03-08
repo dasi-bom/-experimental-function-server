@@ -7,6 +7,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    public static final String ALLOWED_METHOD_NAMES = "GET,POST,HEAD,DELETE,PATCH";
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
@@ -17,7 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "http://localhost:8080",
                         "https://localhost:8080"
                 )
-                .allowedMethods("*")
+                .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
                 .allowedHeaders("*");
     }
 
