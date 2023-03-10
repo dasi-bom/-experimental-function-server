@@ -121,7 +121,8 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public Diary delete(Long diaryId) {
+    // 게시글 삭제 시, S3 Bucket 에서 파일 제거하기 전 로직
+    public Diary deleteBeforeS3(Long diaryId) {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new CustomException(DIARY_NOT_FOUND));
         if (diary.getIsDeleted()) {
@@ -135,6 +136,21 @@ public class DiaryServiceImpl implements DiaryService {
         }
 
         return diary;
+    }
+
+    @Override
+    @Transactional
+    // 게시글 삭제 시, S3 Bucket 에서 파일 제거하고 난 후 로직
+    public void deleteAfterS3(Long diaryId) {
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(() -> new CustomException(DIARY_NOT_FOUND));
+        if (diary.getIsDeleted()) {
+            throw new CustomException(DIARY_NOT_FOUND);
+        }
+
+        // 게시글 삭제일 업데이트
+        diary.deleteDiary();
+        diaryRepository.save(diary);
     }
 
     @Override
