@@ -24,7 +24,9 @@ public interface DiaryService {
 
     void update(Long diaryId, DiaryUpdateReqDto updateRequestDto);
 
-    Diary delete(Long diaryId);
+    Diary deleteBeforeS3(Long diaryId);
+
+    void deleteAfterS3(Long diaryId);
 
     List<DiaryDetailResDto> getRecordList(StampType stampType, String petName, User user);
 }

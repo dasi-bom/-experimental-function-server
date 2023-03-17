@@ -110,13 +110,13 @@ public class DiaryController {
 
     @DeleteMapping("/{diaryId}")
     public Response delete(@PathVariable("diaryId") long diaryId) {
-        Diary deletedDiary = diaryService.delete(diaryId);
+        Diary deletedDiary = diaryService.deleteBeforeS3(diaryId);
         // 이미지 제거
         List<DiaryImage> images = deletedDiary.getImages();
         if (!images.isEmpty()) {
             s3Service.deletePostImages(images);
         }
-        deletedDiary.deleteDiary();
+        diaryService.deleteAfterS3(diaryId);
 
         return new Response("OK", "일기 삭제에 성공했습니다");
     }

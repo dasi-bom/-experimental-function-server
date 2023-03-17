@@ -1,17 +1,14 @@
 package com.dasibom.practice.service;
 
-import static com.dasibom.practice.exception.ErrorCode.DIARY_NOT_FOUND;
 import static com.dasibom.practice.exception.ErrorCode.PET_NOT_FOUND;
+import static com.dasibom.practice.exception.ErrorCode.PET_PROTECTION_ALREADY_ENDED;
 import static com.dasibom.practice.exception.ErrorCode.USER_NOT_FOUND;
 
 import com.dasibom.practice.domain.Diary;
-import com.dasibom.practice.domain.DiaryStamp;
 import com.dasibom.practice.domain.Pet;
 import com.dasibom.practice.domain.Record;
-import com.dasibom.practice.domain.Stamp;
 import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
-import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.ProtectionEndReqDto;
 import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.repository.DiaryRepository;
@@ -22,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,8 +43,13 @@ public class ProtectionServiceImpl implements ProtectionService {
         User user = userRepository.findByUsername("test")
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        // 임보 종료일 update
         Pet pet = findPet(protectionEndReqDto.getPet(), user);
+
+        if (pet.getProtectionEndedAt() != null) {
+            throw new CustomException(PET_PROTECTION_ALREADY_ENDED);
+        }
+
+        // 임보 종료일 update
         pet.updateProtectionEndedAt();
 
         // 다시보기 Record 생성
