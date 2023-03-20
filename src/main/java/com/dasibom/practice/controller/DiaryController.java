@@ -58,14 +58,14 @@ public class DiaryController {
     }
 
     @PostMapping("/save/{diaryId}/text")
-    public Response save_onlyText(@PathVariable("diaryId") Long diaryId,
+    public Response saveDiary(@PathVariable("diaryId") Long diaryId,
             @RequestBody @Valid DiarySaveReqDto requestDto) {
         diaryService.save(diaryId, requestDto);
         return new Response("OK", "일기 등록에 성공했습니다");
     }
 
     @PostMapping(value = "/save/{diaryId}/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Response save_onlyFile(@PathVariable("diaryId") long diaryId,
+    public Response uploadFile(@PathVariable("diaryId") long diaryId,
             @RequestPart(required = false) List<MultipartFile> multipartFile) {
         if (multipartFile == null) {
             throw new CustomException(FILE_NOT_EXIST_ERROR);
