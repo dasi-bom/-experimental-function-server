@@ -70,7 +70,7 @@ public class DiaryController {
         if (multipartFile == null) {
             throw new CustomException(FILE_NOT_EXIST_ERROR);
         }
-        s3Service.uploadImage_onlyFile(multipartFile, "Diary", diaryId);
+        s3Service.uploadImageByDiaryId(multipartFile, "Diary", diaryId);
         return new Response("OK", "파일 업로드에 성공했습니다");
     }
 
