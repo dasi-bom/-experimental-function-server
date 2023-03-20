@@ -114,7 +114,6 @@ public class DiaryServiceImpl implements DiaryService {
         }
 
         Pet pet = findPet(updateRequestDto.getPet(), user);
-//        Pet pet = updatePet(updateRequestDto, user);
         List<DiaryStamp> newDiaryStamps = updateStamp(updateRequestDto, diary);
         diary.updateDiary(updateRequestDto.getTitle(), updateRequestDto.getContent(), newDiaryStamps, pet);
     }
