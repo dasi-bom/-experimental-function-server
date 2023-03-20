@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.8'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10" // QueryDSL
 }
 
 group = 'com.dasibom'
@@ -26,8 +27,45 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// AWS S3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	// Swagger
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+
+	// QueryDSL
+	implementation 'com.querydsl:querydsl-jpa:5.0.0'
+	implementation "com.querydsl:querydsl-apt:5.0.0"
+	implementation "com.querydsl:querydsl-core:5.0.0"
+
+	// StringUtils
+	implementation 'org.apache.commons:commons-lang3:3.0'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// === QueryDSL 추가 시작===
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+sourceSets {
+	main.java.srcDir querydslDir
+}
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl.extendsFrom compileClasspath
+}
+// === QueryDSL 추가 끝===
