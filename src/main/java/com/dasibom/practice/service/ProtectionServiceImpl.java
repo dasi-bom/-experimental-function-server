@@ -43,7 +43,8 @@ public class ProtectionServiceImpl implements ProtectionService {
         User user = userRepository.findByUsername("test")
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        Pet pet = findPet(protectionEndReqDto.getPet(), user);
+        Pet pet = petRepository.findByPetNameAndOwner(protectionEndReqDto.getPet().getPetName(), user)
+                .orElseThrow(() -> new CustomException(PET_NOT_FOUND));
 
         if (pet.getProtectionEndedAt() != null) {
             throw new CustomException(PET_PROTECTION_ALREADY_ENDED);
@@ -100,14 +101,5 @@ public class ProtectionServiceImpl implements ProtectionService {
             }
         }
         return diaries;
-    }
-
-    private Pet findPet(Pet reqPet, User user) {
-        Pet pet = null;
-        if (reqPet != null) {
-            pet = petRepository.findByPetNameAndOwner(reqPet.getPetName(), user)
-                    .orElseThrow(() -> new CustomException(PET_NOT_FOUND));
-        }
-        return pet;
     }
 }
