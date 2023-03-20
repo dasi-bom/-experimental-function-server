@@ -187,11 +187,9 @@ public class DiaryServiceImpl implements DiaryService {
         }
 
         // 기존 스탬프 제거
-        if (updateRequestDto.getStamps() != null) {
-            if (!oldDiaryStamps.isEmpty()) {
-                DiaryStamp.removeDiaryStamp(oldDiaryStamps);
-                stampRepository.deleteAll(oldStamps);
-            }
+        if (updateRequestDto.getStamps() != null && !oldDiaryStamps.isEmpty()) {
+            DiaryStamp.removeDiaryStamp(oldDiaryStamps);
+            stampRepository.deleteAll(oldStamps);
         }
 
         // 새로운 스탬프 생성
