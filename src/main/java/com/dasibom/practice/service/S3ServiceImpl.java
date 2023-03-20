@@ -38,9 +38,8 @@ public class S3ServiceImpl implements S3Service {
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
 
-    // 게시글 이미지 업로드
     @Override
-    public List<String> uploadImage(List<MultipartFile> multipartFile, String dirName, Diary diary) {
+    public List<String> uploadImageByDiaryId(List<MultipartFile> multipartFile, String dirName, Long diaryId) {
 
         List<String> fileNameList = new ArrayList<>();
         List<String> imageUrl = new ArrayList<>();
@@ -48,24 +47,7 @@ public class S3ServiceImpl implements S3Service {
         uploadS3(multipartFile, dirName, fileNameList, imageUrl);
 
         try {
-            storeInfoInDb(imageUrl, fileNameList, diary);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return fileNameList;
-    }
-
-    @Override
-    public List<String> uploadImage_onlyFile(List<MultipartFile> multipartFile, String dirName, Long diaryId) {
-
-        List<String> fileNameList = new ArrayList<>();
-        List<String> imageUrl = new ArrayList<>();
-
-        uploadS3(multipartFile, dirName, fileNameList, imageUrl);
-
-        try {
-            storeInfoInDb_onlyFile(imageUrl, fileNameList, diaryId);
+            storeImagesByDiaryId(imageUrl, fileNameList, diaryId);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -97,19 +79,8 @@ public class S3ServiceImpl implements S3Service {
         });
     }
 
-    // db에 url 과 fileName 정보 저장
-    public void storeInfoInDb(List<String> imageUrls, List<String> fileNameList, Diary diary) throws IOException {
-        for (int i = 0; i < imageUrls.size(); i++) {
-            DiaryImage img = new DiaryImage();
-            img.setImgUrl(imageUrls.get(i));
-            img.setFileName(fileNameList.get(i));
-            img.setDiary(diary);
-
-            diaryImageRepository.save(img);
-        }
-    }
-
-    public void storeInfoInDb_onlyFile(List<String> imageUrls, List<String> fileNameList, Long diaryId) throws IOException {
+    // db에 이미지 url 과 fileName 정보 저장
+    public void storeImagesByDiaryId(List<String> imageUrls, List<String> fileNameList, Long diaryId) throws IOException {
         for (int i = 0; i < imageUrls.size(); i++) {
             DiaryImage img = new DiaryImage();
             img.setImgUrl(imageUrls.get(i));
@@ -148,5 +119,35 @@ public class S3ServiceImpl implements S3Service {
             throw new CustomException(INVALID_FILE_ERROR);
         }
     }
+
+    // 게시글 이미지 업로드
+//    @Override
+//    public List<String> uploadImage(List<MultipartFile> multipartFile, String dirName, Diary diary) {
+//
+//        List<String> fileNameList = new ArrayList<>();
+//        List<String> imageUrl = new ArrayList<>();
+//
+//        uploadS3(multipartFile, dirName, fileNameList, imageUrl);
+//
+//        try {
+//            storeInfoInDb(imageUrl, fileNameList, diary);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return fileNameList;
+//    }
+
+    // db에 url 과 fileName 정보 저장
+//    public void storeInfoInDb(List<String> imageUrls, List<String> fileNameList, Diary diary) throws IOException {
+//        for (int i = 0; i < imageUrls.size(); i++) {
+//            DiaryImage img = new DiaryImage();
+//            img.setImgUrl(imageUrls.get(i));
+//            img.setFileName(fileNameList.get(i));
+//            img.setDiary(diary);
+//
+//            diaryImageRepository.save(img);
+//        }
+//    }
 
 }

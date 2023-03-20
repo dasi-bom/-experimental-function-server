@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Getter
 @Setter
 @Slf4j
+@Table(name = "diary_tb")
 public class Diary {
 
     @Id

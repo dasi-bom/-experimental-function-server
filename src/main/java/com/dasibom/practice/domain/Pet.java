@@ -13,10 +13,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.Getter;
 
 @Entity
 @Getter
+@Table(name = "pet_tb")
 public class Pet {
 
     @Id
@@ -38,7 +40,7 @@ public class Pet {
     private LocalDate protectionEndedAt;
 
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL)
-    private List<Record> record = new ArrayList<>();
+    private List<Record> records = new ArrayList<>();
 
     public void updateProtectionEndedAt() {
         protectionEndedAt = LocalDate.now();
