@@ -40,7 +40,7 @@ public class Pet {
     private LocalDate protectionEndedAt;
 
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL)
-    private List<Record> record = new ArrayList<>();
+    private List<Record> records = new ArrayList<>();
 
     public void updateProtectionEndedAt() {
         protectionEndedAt = LocalDate.now();
