@@ -63,18 +63,18 @@ public class ProtectionServiceImpl implements ProtectionService {
 
 
         List<Diary> walkDiaries = getDiaries(existDiaries, StampType.WALK);
-        Record record = Record.createRecord(pet,StampType.WALK, walkDiaries);
-        recordRepository.save(record);
+        Record walkRecord = Record.createRecord(pet,StampType.WALK, walkDiaries);
+        recordRepository.save(walkRecord);
 
 
         List<Diary> treatDiaries = getDiaries(existDiaries, StampType.TREAT);
-        Record record2 = Record.createRecord(pet,StampType.TREAT, treatDiaries);
-        recordRepository.save(record2);
+        Record treatRecord = Record.createRecord(pet,StampType.TREAT, treatDiaries);
+        recordRepository.save(treatRecord);
 
 
         List<Diary> toyDiaries = getDiaries(existDiaries, StampType.TOY);
-        Record record3 = Record.createRecord(pet,StampType.TOY, toyDiaries);
-        recordRepository.save(record3);
+        Record toyRecord = Record.createRecord(pet,StampType.TOY, toyDiaries);
+        recordRepository.save(toyRecord);
     }
 
     private List<Diary> getDiaries(List<Diary> existDiaries, StampType stampType) {
