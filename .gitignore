@@ -41,3 +41,4 @@ out/
 
 ### Secret ###
 aws-s3.yml
+.env
