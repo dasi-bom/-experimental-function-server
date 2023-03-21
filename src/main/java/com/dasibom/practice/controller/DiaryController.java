@@ -12,7 +12,6 @@ import com.dasibom.practice.domain.User;
 import com.dasibom.practice.dto.DiaryBriefResDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiaryDto;
-import com.dasibom.practice.dto.DiaryUpdateReqDto;
 import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.repository.UserRepository;
 import com.dasibom.practice.service.DiaryService;
@@ -103,7 +102,7 @@ public class DiaryController {
 
     @PatchMapping("/{diaryId}")
     public Response update(@PathVariable("diaryId") long diaryId,
-            @RequestBody @Valid DiaryUpdateReqDto updateRequestDto) {
+            @RequestBody @Valid DiaryDto.UpdateRequest updateRequestDto) {
         diaryService.update(diaryId, updateRequestDto);
         return new Response("OK", "일기 수정에 성공했습니다");
     }

@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 public class DiaryDto {
 
@@ -46,6 +47,16 @@ public class DiaryDto {
                     .createdAt(LocalDateTime.now())
                     .build();
         }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class UpdateRequest {
+        private Pet pet = null;
+        private String title;
+        private String content;
+        private List<Stamp> stamps = null;
     }
 
 

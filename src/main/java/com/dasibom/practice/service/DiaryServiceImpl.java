@@ -19,7 +19,6 @@ import com.dasibom.practice.domain.User;
 import com.dasibom.practice.dto.DiaryBriefResDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiaryDto;
-import com.dasibom.practice.dto.DiaryUpdateReqDto;
 import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.repository.DiaryRepository;
 import com.dasibom.practice.repository.PetRepository;
@@ -101,7 +100,7 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public void update(Long diaryId, DiaryUpdateReqDto updateRequestDto) {
+    public void update(Long diaryId, DiaryDto.UpdateRequest updateRequestDto) {
 
         // TODO: 하드 코딩 변경
         User user = userRepository.findByUsername("test")
@@ -177,7 +176,7 @@ public class DiaryServiceImpl implements DiaryService {
         return pet;
     }
 
-    private List<DiaryStamp> updateStamp(DiaryUpdateReqDto updateRequestDto, Diary diary) {
+    private List<DiaryStamp> updateStamp(DiaryDto.UpdateRequest updateRequestDto, Diary diary) {
         // initialize oldStamps
         List<DiaryStamp> oldDiaryStamps = diary.getDiaryStamps();
         List<Stamp> oldStamps = new ArrayList<>();

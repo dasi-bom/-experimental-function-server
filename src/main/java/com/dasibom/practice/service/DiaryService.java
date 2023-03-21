@@ -7,7 +7,6 @@ import com.dasibom.practice.domain.User;
 import com.dasibom.practice.dto.DiaryBriefResDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiaryDto;
-import com.dasibom.practice.dto.DiaryUpdateReqDto;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -22,7 +21,7 @@ public interface DiaryService {
 
     Slice<DiaryBriefResDto> getDiaryList(Long cursor, DiaryReadCondition condition, Pageable pageRequest);
 
-    void update(Long diaryId, DiaryUpdateReqDto updateRequestDto);
+    void update(Long diaryId, DiaryDto.UpdateRequest updateRequestDto);
 
     Diary deleteBeforeS3(Long diaryId);
 
