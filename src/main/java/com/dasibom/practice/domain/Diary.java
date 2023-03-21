@@ -12,7 +12,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +25,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Getter
 @Setter
 @Slf4j
+@NoArgsConstructor
 @Table(name = "diary_tb")
 public class Diary {
 
@@ -61,6 +64,16 @@ public class Diary {
     @JoinColumn(name = "recordId")
     private Record record;
 
+    @Builder
+    public Diary(String title, String content, Pet pet, LocalDateTime createdAt) {
+        this.title = title;
+        this.content = content;
+        this.pet = pet;
+        this.createdAt = createdAt;
+//        this.author = author;
+//        this.diaryStamps = diaryStamps;
+    }
+
     public void addDiaryStamp(DiaryStamp diaryStamp) {
         diaryStamps.add(diaryStamp);
         diaryStamp.setDiary(this);
@@ -69,7 +82,10 @@ public class Diary {
     public static Diary createDiary(Long diaryId, User user, Pet pet, String title, String content, List<DiaryStamp> stamps) {
         Diary diary = new Diary();
         diary.setId(diaryId);
+
         diary.setAuthor(user);
+        user.getDiaries().add(diary);
+
         diary.setPet(pet);
         for (DiaryStamp stamp : stamps) {
             diary.addDiaryStamp(stamp);
