@@ -4,7 +4,6 @@ import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
-import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiaryDto;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +15,7 @@ public interface DiaryService {
 
     Diary save(Long diaryId, DiaryDto.SaveRequest requestDto);
 
-    DiaryDetailResDto getDetailedDiary(Long diaryId);
+    DiaryDto.DetailResponse getDetailedDiary(Long diaryId);
 
     Slice<DiaryDto.SimpleResponse> getDiaryList(Long cursor, DiaryReadCondition condition, Pageable pageRequest);
 
@@ -26,5 +25,5 @@ public interface DiaryService {
 
     void deleteAfterS3(Long diaryId);
 
-    List<DiaryDetailResDto> getRecordList(StampType stampType, String petName, User user);
+    List<DiaryDto.DetailResponse> getRecordList(StampType stampType, String petName, User user);
 }

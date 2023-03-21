@@ -9,7 +9,6 @@ import com.dasibom.practice.domain.DiaryImage;
 import com.dasibom.practice.domain.Response;
 import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
-import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiaryDto;
 import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.repository.UserRepository;
@@ -85,7 +84,7 @@ public class DiaryController {
 //    }
 
     @GetMapping("/detail/{diaryId}")
-    public DiaryDetailResDto getDetailedDiary(@PathVariable("diaryId") long diaryId) {
+    public DiaryDto.DetailResponse getDetailedDiary(@PathVariable("diaryId") long diaryId) {
         return diaryService.getDetailedDiary(diaryId);
     }
 
@@ -121,7 +120,7 @@ public class DiaryController {
 
     @ApiOperation(value = "다시 보기", notes = "스탬프 별 다시보기")
     @GetMapping("/list/record")
-    public List<DiaryDetailResDto> recordList(@RequestParam StampType stampType, @RequestParam String petName) {
+    public List<DiaryDto.DetailResponse> recordList(@RequestParam StampType stampType, @RequestParam String petName) {
 
         // TODO: 하드 코딩 변경
         User user = userRepository.findByUsername("test")

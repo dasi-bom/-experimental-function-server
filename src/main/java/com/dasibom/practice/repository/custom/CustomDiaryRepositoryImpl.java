@@ -6,7 +6,6 @@ import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
-import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiaryDto;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -63,7 +62,7 @@ public class CustomDiaryRepositoryImpl implements CustomDiaryRepository {
 
     // 스탬프 별 조회
     @Override
-    public List<DiaryDetailResDto> getDiaryDetailList(DiaryReadCondition condition) {
+    public List<DiaryDto.DetailResponse> getDiaryDetailList(DiaryReadCondition condition) {
         int limitSize = 3;
         List<Diary> diaryList = queryFactory
                 .select(diary)
@@ -78,9 +77,9 @@ public class CustomDiaryRepositoryImpl implements CustomDiaryRepository {
                 .limit(limitSize)
                 .fetch();
 
-        List<DiaryDetailResDto> detailDiaryInfos = new ArrayList<>();
+        List<DiaryDto.DetailResponse> detailDiaryInfos = new ArrayList<>();
         for (Diary diary : diaryList) {
-            detailDiaryInfos.add(new DiaryDetailResDto(diary));
+            detailDiaryInfos.add(new DiaryDto.DetailResponse(diary));
         }
 
         return detailDiaryInfos;

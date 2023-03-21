@@ -13,7 +13,6 @@ import com.dasibom.practice.domain.Pet;
 import com.dasibom.practice.domain.Stamp;
 import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
-import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiaryDto;
 import com.dasibom.practice.repository.DiaryRepository;
 import com.dasibom.practice.repository.PetRepository;
@@ -136,7 +135,7 @@ class DiaryServiceTest {
         Long id = 1L;
         given(diaryRepository.findById(id)).willReturn(Optional.of(diary));
 
-        DiaryDetailResDto diaryDetail = diaryService.getDetailedDiary(id);
+        DiaryDto.DetailResponse diaryDetail = diaryService.getDetailedDiary(id);
 
         assertThat(diaryDetail.getTitle()).isEqualTo(diaryDetail.getTitle());
         assertThat(diaryDetail.getContent()).isEqualTo(diaryDetail.getContent());

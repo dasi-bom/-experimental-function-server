@@ -16,7 +16,6 @@ import com.dasibom.practice.domain.Record;
 import com.dasibom.practice.domain.Stamp;
 import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
-import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiaryDto;
 import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.repository.DiaryRepository;
@@ -82,13 +81,13 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public DiaryDetailResDto getDetailedDiary(Long diaryId) {
+    public DiaryDto.DetailResponse getDetailedDiary(Long diaryId) {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new CustomException(DIARY_NOT_FOUND));
         if (diary.getIsDeleted()) {
             throw new CustomException(DIARY_NOT_FOUND);
         }
-        return new DiaryDetailResDto(diary);
+        return new DiaryDto.DetailResponse(diary);
     }
 
     @Override
@@ -152,15 +151,15 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public List<DiaryDetailResDto> getRecordList(StampType stampType, String petName, User user) {
+    public List<DiaryDto.DetailResponse> getRecordList(StampType stampType, String petName, User user) {
         Pet pet = petRepository.findByPetNameAndOwner(petName, user)
                 .orElseThrow(() -> new CustomException(PET_NOT_FOUND));
-        List<DiaryDetailResDto> result = new ArrayList<>();
+        List<DiaryDto.DetailResponse> result = new ArrayList<>();
         Record record = recordRepository.findByPetAndStampType(pet, stampType)
                 .orElseThrow(() -> new CustomException(RECORD_NOT_FOUND));
 
         for (Diary diary : record.getDiaries()) {
-            result.add(new DiaryDetailResDto(diary));
+            result.add(new DiaryDto.DetailResponse(diary));
         }
         return result;
     }
