@@ -25,6 +25,7 @@ public class DiaryDto {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class SaveRequest {
+
         @NotNull(message = "대상 동물은 필수 선택 값입니다.")
         private Pet pet;
 
@@ -59,6 +60,7 @@ public class DiaryDto {
     @Setter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class UpdateRequest {
+
         private Pet pet = null;
         private String title;
         private String content;
@@ -70,6 +72,7 @@ public class DiaryDto {
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class SimpleResponse {
+
         private Long diaryId;
         private String petName;
         private String title;
@@ -88,14 +91,25 @@ public class DiaryDto {
     }
 
     @Getter
-    @AllArgsConstructor
     public static class DetailResponse {
+
         private final String title;
         private final String content;
         private final String petName;
-        private final List<String> imgUrls = new ArrayList<>();
-        private final List<String> stampTypes = new ArrayList<>();
+        private List<String> imgUrls = new ArrayList<>();
+        private List<String> stampTypes = new ArrayList<>();
         private final LocalDateTime createdAt;
+
+        @Builder
+        public DetailResponse(String title, String content, String petName, List<String> imgUrls,
+                List<String> stampTypes, LocalDateTime createdAt) {
+            this.title = title;
+            this.content = content;
+            this.petName = petName;
+            this.imgUrls = imgUrls;
+            this.stampTypes = stampTypes;
+            this.createdAt = createdAt;
+        }
 
         public DetailResponse(Diary entity) {
             this.title = entity.getTitle();
@@ -121,6 +135,7 @@ public class DiaryDto {
 
     @Data
     public static class ReadCondition {
+
         private User user; // 작성자
         private String petName;
 

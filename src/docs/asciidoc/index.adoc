@@ -1,0 +1,34 @@
+= REST Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+
+[[Diary_API]]
+== Diary API
+
+
+[[Diary_조회]]
+=== Member 조회
+
+**curl**
+
+include::{snippets}/getDetailedDiary/curl-request.adoc[]
+
+**Example request**
+
+include::{snippets}/getDetailedDiary/http-request.adoc[]
+
+**Example response**
+
+include::{snippets}/getDetailedDiary/http-response.adoc[]
+
+---
+

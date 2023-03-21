@@ -45,7 +45,7 @@ public class DiaryController {
     private final S3Service s3Service;
 
     // TODO: 로그인 기능 개발 이후 제거
-    private final UserRepository userRepository;
+//    private final UserRepository userRepository;
 
     @GetMapping("/issue/id")
     public Response issueId() {
@@ -117,15 +117,15 @@ public class DiaryController {
         return new Response("OK", "일기 삭제에 성공했습니다");
     }
 
-    @ApiOperation(value = "다시 보기", notes = "스탬프 별 다시보기")
-    @GetMapping("/list/record")
-    public List<DiaryDto.DetailResponse> recordList(@RequestParam StampType stampType, @RequestParam String petName) {
-
-        // TODO: 하드 코딩 변경
-        User user = userRepository.findByUsername("test")
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-
-        return diaryService.getRecordList(stampType, petName, user);
-    }
+//    @ApiOperation(value = "다시 보기", notes = "스탬프 별 다시보기")
+//    @GetMapping("/list/record")
+//    public List<DiaryDto.DetailResponse> recordList(@RequestParam StampType stampType, @RequestParam String petName) {
+//
+//        // TODO: 하드 코딩 변경
+//        User user = userRepository.findByUsername("test")
+//                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+//
+//        return diaryService.getRecordList(stampType, petName, user);
+//    }
 
 }
