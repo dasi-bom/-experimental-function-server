@@ -3,6 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '2.7.8'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10" // QueryDSL
+	id 'org.asciidoctor.jvm.convert' version '3.3.2' // asciidoctor
 }
 
 group = 'com.dasibom'
@@ -17,6 +18,32 @@ configurations {
 
 repositories {
 	mavenCentral()
+}
+
+ext{
+	snippetDir = file('build/generated-snippets')
+}
+
+test {
+	useJUnitPlatform()
+	outputs.dir snippetDir // 생성된 파일을 미리 생성한 디렉토리(build/generated-snippets)에 저장 (3)
+}
+
+asciidoctor{
+	inputs.dir snippetDir
+	dependsOn test
+}
+
+bootJar{
+	dependsOn asciidoctor
+	from("src/docs/asciidoc"){
+		into 'BOOT-INF/classes/static/docs'
+	}
+
+	copy {
+		from asciidoctor.outputDir
+		into "src/main/resources/static/docs"
+	}
 }
 
 dependencies {
@@ -42,11 +69,20 @@ dependencies {
 
 	// StringUtils
 	implementation 'org.apache.commons:commons-lang3:3.0'
+
+	// H2
+	implementation 'com.h2database:h2:1.4.199'
+
+	// spring rest docs 을 이용하기 위한 라이브러리
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+	// mockmvc
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
+//tasks.named('test') {
+//	useJUnitPlatform()
+//}
 
 // === QueryDSL 추가 시작===
 def querydslDir = "$buildDir/generated/querydsl"
