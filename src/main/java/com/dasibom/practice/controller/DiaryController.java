@@ -9,7 +9,6 @@ import com.dasibom.practice.domain.DiaryImage;
 import com.dasibom.practice.domain.Response;
 import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
-import com.dasibom.practice.dto.DiaryBriefResDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiaryDto;
 import com.dasibom.practice.exception.CustomException;
@@ -91,7 +90,7 @@ public class DiaryController {
     }
 
     @GetMapping("/list")
-    public Slice<DiaryBriefResDto> list(Long cursor, String searchKeyword,
+    public Slice<DiaryDto.SimpleResponse> list(Long cursor, String searchKeyword,
             @PageableDefault(size = 5, sort = "createAt") Pageable pageRequest) {
         if (StringUtils.hasText(searchKeyword)) {
             return diaryService.getDiaryList(cursor, new DiaryReadCondition(searchKeyword),

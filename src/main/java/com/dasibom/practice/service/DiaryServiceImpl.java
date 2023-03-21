@@ -16,7 +16,6 @@ import com.dasibom.practice.domain.Record;
 import com.dasibom.practice.domain.Stamp;
 import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
-import com.dasibom.practice.dto.DiaryBriefResDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
 import com.dasibom.practice.dto.DiaryDto;
 import com.dasibom.practice.exception.CustomException;
@@ -94,7 +93,7 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public Slice<DiaryBriefResDto> getDiaryList(Long cursor, DiaryReadCondition condition, Pageable pageRequest) {
+    public Slice<DiaryDto.SimpleResponse> getDiaryList(Long cursor, DiaryReadCondition condition, Pageable pageRequest) {
         return diaryRepository.getDiaryBriefInfoScroll(cursor, condition, pageRequest);
     }
 
