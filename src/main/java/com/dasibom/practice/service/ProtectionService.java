@@ -1,8 +1,8 @@
 package com.dasibom.practice.service;
 
-import com.dasibom.practice.dto.ProtectionEndReqDto;
+import com.dasibom.practice.dto.ProtectionDto;
 
 public interface ProtectionService {
 
-    void saveEndStatus(ProtectionEndReqDto protectEndReqDto);
+    void saveEndStatus(ProtectionDto.EndRequest protectEndReqDto);
 }
