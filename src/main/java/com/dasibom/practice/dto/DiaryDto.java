@@ -5,6 +5,8 @@ import com.dasibom.practice.domain.DiaryImage;
 import com.dasibom.practice.domain.DiaryStamp;
 import com.dasibom.practice.domain.Pet;
 import com.dasibom.practice.domain.Stamp;
+import com.dasibom.practice.domain.StampType;
+import com.dasibom.practice.domain.User;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -116,5 +119,35 @@ public class DiaryDto {
         }
     }
 
+    @Data
+    public static class ReadCondition {
+        private User user; // 작성자
+        private String petName;
+
+        private String searchKeyword; // 검색 키워드
+
+        private Boolean isDeleted;
+
+        private StampType stampType;
+
+        // 전체 일기 조회
+        public ReadCondition() {
+            this.isDeleted = false;
+        }
+
+        // 전체 일기 검색
+        public ReadCondition(String searchKeyword) {
+            this.searchKeyword = searchKeyword;
+            this.isDeleted = false;
+        }
+
+        // 스탬프 별 (내가 쓴) 일기 조회
+        public ReadCondition(StampType stampType, User user, String petName) {
+            this.user = user;
+            this.petName = petName;
+            this.stampType = stampType;
+            this.isDeleted = false;
+        }
+    }
 
 }

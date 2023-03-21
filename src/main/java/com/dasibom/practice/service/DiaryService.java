@@ -1,6 +1,5 @@
 package com.dasibom.practice.service;
 
-import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
@@ -17,7 +16,7 @@ public interface DiaryService {
 
     DiaryDto.DetailResponse getDetailedDiary(Long diaryId);
 
-    Slice<DiaryDto.SimpleResponse> getDiaryList(Long cursor, DiaryReadCondition condition, Pageable pageRequest);
+    Slice<DiaryDto.SimpleResponse> getDiaryList(Long cursor, DiaryDto.ReadCondition condition, Pageable pageRequest);
 
     void update(Long diaryId, DiaryDto.UpdateRequest updateRequestDto);
 

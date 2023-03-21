@@ -2,7 +2,6 @@ package com.dasibom.practice.repository.custom;
 
 import static com.dasibom.practice.domain.QDiary.diary;
 
-import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
@@ -31,7 +30,7 @@ public class CustomDiaryRepositoryImpl implements CustomDiaryRepository {
 
     // 게시글 조회 및 검색
     @Override
-    public Slice<DiaryDto.SimpleResponse> getDiaryBriefInfoScroll(Long cursorId, DiaryReadCondition condition,
+    public Slice<DiaryDto.SimpleResponse> getDiaryBriefInfoScroll(Long cursorId, DiaryDto.ReadCondition condition,
             Pageable pageable) {
 
         List<Diary> diaryList = queryFactory
@@ -62,7 +61,7 @@ public class CustomDiaryRepositoryImpl implements CustomDiaryRepository {
 
     // 스탬프 별 조회
     @Override
-    public List<DiaryDto.DetailResponse> getDiaryDetailList(DiaryReadCondition condition) {
+    public List<DiaryDto.DetailResponse> getDiaryDetailList(DiaryDto.ReadCondition condition) {
         int limitSize = 3;
         List<Diary> diaryList = queryFactory
                 .select(diary)

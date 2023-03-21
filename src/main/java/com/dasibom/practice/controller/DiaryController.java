@@ -3,7 +3,6 @@ package com.dasibom.practice.controller;
 import static com.dasibom.practice.exception.ErrorCode.FILE_NOT_EXIST_ERROR;
 import static com.dasibom.practice.exception.ErrorCode.USER_NOT_FOUND;
 
-import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.DiaryImage;
 import com.dasibom.practice.domain.Response;
@@ -92,10 +91,10 @@ public class DiaryController {
     public Slice<DiaryDto.SimpleResponse> list(Long cursor, String searchKeyword,
             @PageableDefault(size = 5, sort = "createAt") Pageable pageRequest) {
         if (StringUtils.hasText(searchKeyword)) {
-            return diaryService.getDiaryList(cursor, new DiaryReadCondition(searchKeyword),
+            return diaryService.getDiaryList(cursor, new DiaryDto.ReadCondition(searchKeyword),
                     pageRequest); // searchKeyword 가 포함된 일기 조회
         }
-        return diaryService.getDiaryList(cursor, new DiaryReadCondition(), pageRequest); // 모든 일기 조회
+        return diaryService.getDiaryList(cursor, new DiaryDto.ReadCondition(), pageRequest); // 모든 일기 조회
     }
 
     @PatchMapping("/{diaryId}")

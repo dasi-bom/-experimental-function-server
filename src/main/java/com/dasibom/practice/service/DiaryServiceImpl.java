@@ -8,7 +8,6 @@ import static com.dasibom.practice.exception.ErrorCode.STAMP_LIST_SIZE_ERROR;
 import static com.dasibom.practice.exception.ErrorCode.STAMP_NOT_FOUND;
 import static com.dasibom.practice.exception.ErrorCode.USER_NOT_FOUND;
 
-import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.DiaryStamp;
 import com.dasibom.practice.domain.Pet;
@@ -92,7 +91,7 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public Slice<DiaryDto.SimpleResponse> getDiaryList(Long cursor, DiaryReadCondition condition, Pageable pageRequest) {
+    public Slice<DiaryDto.SimpleResponse> getDiaryList(Long cursor, DiaryDto.ReadCondition condition, Pageable pageRequest) {
         return diaryRepository.getDiaryBriefInfoScroll(cursor, condition, pageRequest);
     }
 
