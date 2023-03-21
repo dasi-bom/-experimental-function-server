@@ -90,6 +90,15 @@ class DiaryServiceTest {
                 .build();
     }
 
+    private DiaryDto.UpdateRequest createUpdateRequest() {
+        return DiaryDto.UpdateRequest.builder()
+                .title("updatedTitle")
+                .content("updatedContent")
+                .pet(null)
+                .stamps(null)
+                .build();
+    }
+
     private Diary createDiary() {
         return createSaveRequest().toEntity();
     }
@@ -144,6 +153,22 @@ class DiaryServiceTest {
         assertThat(diaryDetail.getStampTypes()).isEqualTo(diaryDetail.getStampTypes());
         assertThat(diaryDetail.getCreatedAt()).isEqualTo(diaryDetail.getCreatedAt());
         verify(diaryRepository, times(1)).findById(id);
+    }
+
+    @DisplayName("일부 수정에 성공한다. (제목, 내용)")
+    @Test
+    public void update() {
+        User user = createUser();
+        DiaryDto.UpdateRequest diary = createUpdateRequest();
+
+        when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
+        when(diaryRepository.findById(any())).thenReturn(Optional.of(diary.toEntity()));
+
+        diaryService.update(1L, diary);
+
+//        assertThat(user.getDiaries().size()).isEqualTo(1);
+        verify(userRepository, atLeastOnce()).findByUsername("test");
+        verify(diaryRepository, atLeastOnce()).findById(any());
     }
 
 }

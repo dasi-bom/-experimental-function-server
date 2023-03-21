@@ -65,11 +65,12 @@ public class Diary {
     private Record record;
 
     @Builder
-    public Diary(String title, String content, Pet pet, LocalDateTime createdAt) {
+    public Diary(String title, String content, Pet pet, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.title = title;
         this.content = content;
         this.pet = pet;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
 //        this.author = author;
 //        this.diaryStamps = diaryStamps;
     }

@@ -65,6 +65,23 @@ public class DiaryDto {
         private String title;
         private String content;
         private List<Stamp> stamps = null;
+
+        @Builder
+        public UpdateRequest(Pet pet, String title, String content, List<Stamp> stamps) {
+            this.pet = pet;
+            this.title = title;
+            this.content = content;
+            this.stamps = stamps;
+        }
+
+        public Diary toEntity() {
+            return Diary.builder()
+                    .content(this.content)
+                    .title(this.title)
+                    .pet(this.pet)
+                    .updatedAt(LocalDateTime.now())
+                    .build();
+        }
     }
 
     @Getter
