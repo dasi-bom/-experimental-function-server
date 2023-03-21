@@ -11,7 +11,7 @@ import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
 import com.dasibom.practice.dto.DiaryBriefResDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
-import com.dasibom.practice.dto.DiarySaveReqDto;
+import com.dasibom.practice.dto.DiaryDto;
 import com.dasibom.practice.dto.DiaryUpdateReqDto;
 import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.repository.UserRepository;
@@ -59,7 +59,7 @@ public class DiaryController {
 
     @PostMapping("/save/{diaryId}/text")
     public Response saveDiary(@PathVariable("diaryId") Long diaryId,
-            @RequestBody @Valid DiarySaveReqDto requestDto) {
+            @RequestBody @Valid DiaryDto.SaveRequest requestDto) {
         diaryService.save(diaryId, requestDto);
         return new Response("OK", "일기 등록에 성공했습니다");
     }
@@ -75,7 +75,7 @@ public class DiaryController {
     }
 
 //    @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-//    public Response save(@RequestPart @Valid DiarySaveReqDto requestDto,
+//    public Response save(@RequestPart @Valid DiaryDto.SaveRequest requestDto,
 //            @RequestPart(required = false) List<MultipartFile> multipartFile) {
 //
 //        Diary diary = diaryService.save(requestDto);

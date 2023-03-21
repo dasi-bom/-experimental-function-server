@@ -6,7 +6,7 @@ import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
 import com.dasibom.practice.dto.DiaryBriefResDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
-import com.dasibom.practice.dto.DiarySaveReqDto;
+import com.dasibom.practice.dto.DiaryDto;
 import com.dasibom.practice.dto.DiaryUpdateReqDto;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +16,7 @@ public interface DiaryService {
 
     Long issueId();
 
-    Diary save(Long diaryId, DiarySaveReqDto requestDto);
+    Diary save(Long diaryId, DiaryDto.SaveRequest requestDto);
 
     DiaryDetailResDto getDetailedDiary(Long diaryId);
 

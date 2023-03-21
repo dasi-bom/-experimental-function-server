@@ -18,7 +18,7 @@ import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
 import com.dasibom.practice.dto.DiaryBriefResDto;
 import com.dasibom.practice.dto.DiaryDetailResDto;
-import com.dasibom.practice.dto.DiarySaveReqDto;
+import com.dasibom.practice.dto.DiaryDto;
 import com.dasibom.practice.dto.DiaryUpdateReqDto;
 import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.repository.DiaryRepository;
@@ -59,7 +59,7 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public Diary save(Long diaryId, DiarySaveReqDto requestDto) {
+    public Diary save(Long diaryId, DiaryDto.SaveRequest requestDto) {
 
         // TODO: 하드 코딩 변경
         User user = userRepository.findByUsername("test")
@@ -79,7 +79,7 @@ public class DiaryServiceImpl implements DiaryService {
         List<DiaryStamp> diaryStamps = makeDiaryStamps(stamps);
         Pet pet = petRepository.findByPetNameAndOwner(requestDto.getPet().getPetName(), user)
                 .orElseThrow(() -> new CustomException(PET_NOT_FOUND));
-        return getDiary(diaryId, requestDto, user, diaryStamps, pet);
+        return saveDiary(diaryId, requestDto, user, diaryStamps, pet);
     }
 
     @Override
@@ -204,7 +204,7 @@ public class DiaryServiceImpl implements DiaryService {
         return newDiaryStamps;
     }
 
-    private Diary getDiary(Long diaryId, DiarySaveReqDto requestDto, User user, List<DiaryStamp> diaryStamps, Pet pet) {
+    private Diary saveDiary(Long diaryId, DiaryDto.SaveRequest requestDto, User user, List<DiaryStamp> diaryStamps, Pet pet) {
         Diary diary = Diary.createDiary(diaryId, user, pet, requestDto.getTitle(), requestDto.getContent(),
                 diaryStamps);
         diaryRepository.save(diary);
