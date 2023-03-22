@@ -3,16 +3,12 @@ package com.dasibom.practice.controller;
 import static com.dasibom.practice.exception.ErrorCode.FILE_NOT_EXIST_ERROR;
 import static com.dasibom.practice.exception.ErrorCode.USER_NOT_FOUND;
 
-import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.DiaryImage;
 import com.dasibom.practice.domain.Response;
 import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
-import com.dasibom.practice.dto.DiaryBriefResDto;
-import com.dasibom.practice.dto.DiaryDetailResDto;
-import com.dasibom.practice.dto.DiarySaveReqDto;
-import com.dasibom.practice.dto.DiaryUpdateReqDto;
+import com.dasibom.practice.dto.DiaryDto;
 import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.repository.UserRepository;
 import com.dasibom.practice.service.DiaryService;
@@ -49,7 +45,7 @@ public class DiaryController {
     private final S3Service s3Service;
 
     // TODO: 로그인 기능 개발 이후 제거
-    private final UserRepository userRepository;
+//    private final UserRepository userRepository;
 
     @GetMapping("/issue/id")
     public Response issueId() {
@@ -58,14 +54,14 @@ public class DiaryController {
     }
 
     @PostMapping("/save/{diaryId}/text")
-    public Response save_onlyText(@PathVariable("diaryId") Long diaryId,
-            @RequestBody @Valid DiarySaveReqDto requestDto) {
+    public Response saveDiary(@PathVariable("diaryId") Long diaryId,
+            @RequestBody @Valid DiaryDto.SaveRequest requestDto) {
         diaryService.save(diaryId, requestDto);
         return new Response("OK", "일기 등록에 성공했습니다");
     }
 
     @PostMapping(value = "/save/{diaryId}/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Response save_onlyFile(@PathVariable("diaryId") long diaryId,
+    public Response uploadFile(@PathVariable("diaryId") long diaryId,
             @RequestPart(required = false) List<MultipartFile> multipartFile) {
         if (multipartFile == null) {
             throw new CustomException(FILE_NOT_EXIST_ERROR);
@@ -75,7 +71,7 @@ public class DiaryController {
     }
 
 //    @PostMapping(value = "/save", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-//    public Response save(@RequestPart @Valid DiarySaveReqDto requestDto,
+//    public Response save(@RequestPart @Valid DiaryDto.SaveRequest requestDto,
 //            @RequestPart(required = false) List<MultipartFile> multipartFile) {
 //
 //        Diary diary = diaryService.save(requestDto);
@@ -87,23 +83,23 @@ public class DiaryController {
 //    }
 
     @GetMapping("/detail/{diaryId}")
-    public DiaryDetailResDto getDetailedDiary(@PathVariable("diaryId") long diaryId) {
+    public DiaryDto.DetailResponse getDetailedDiary(@PathVariable("diaryId") long diaryId) {
         return diaryService.getDetailedDiary(diaryId);
     }
 
     @GetMapping("/list")
-    public Slice<DiaryBriefResDto> list(Long cursor, String searchKeyword,
+    public Slice<DiaryDto.SimpleResponse> list(Long cursor, String searchKeyword,
             @PageableDefault(size = 5, sort = "createAt") Pageable pageRequest) {
         if (StringUtils.hasText(searchKeyword)) {
-            return diaryService.getDiaryList(cursor, new DiaryReadCondition(searchKeyword),
+            return diaryService.getDiaryList(cursor, new DiaryDto.ReadCondition(searchKeyword),
                     pageRequest); // searchKeyword 가 포함된 일기 조회
         }
-        return diaryService.getDiaryList(cursor, new DiaryReadCondition(), pageRequest); // 모든 일기 조회
+        return diaryService.getDiaryList(cursor, new DiaryDto.ReadCondition(), pageRequest); // 모든 일기 조회
     }
 
     @PatchMapping("/{diaryId}")
     public Response update(@PathVariable("diaryId") long diaryId,
-            @RequestBody @Valid DiaryUpdateReqDto updateRequestDto) {
+            @RequestBody @Valid DiaryDto.UpdateRequest updateRequestDto) {
         diaryService.update(diaryId, updateRequestDto);
         return new Response("OK", "일기 수정에 성공했습니다");
     }
@@ -121,15 +117,15 @@ public class DiaryController {
         return new Response("OK", "일기 삭제에 성공했습니다");
     }
 
-    @ApiOperation(value = "다시 보기", notes = "스탬프 별 다시보기")
-    @GetMapping("/list/record")
-    public List<DiaryDetailResDto> recordList(@RequestParam StampType stampType, @RequestParam String petName) {
-
-        // TODO: 하드 코딩 변경
-        User user = userRepository.findByUsername("test")
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-
-        return diaryService.getRecordList(stampType, petName, user);
-    }
+//    @ApiOperation(value = "다시 보기", notes = "스탬프 별 다시보기")
+//    @GetMapping("/list/record")
+//    public List<DiaryDto.DetailResponse> recordList(@RequestParam StampType stampType, @RequestParam String petName) {
+//
+//        // TODO: 하드 코딩 변경
+//        User user = userRepository.findByUsername("test")
+//                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+//
+//        return diaryService.getRecordList(stampType, petName, user);
+//    }
 
 }
