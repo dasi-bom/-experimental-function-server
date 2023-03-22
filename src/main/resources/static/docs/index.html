@@ -469,13 +469,54 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="paragraph">
-<p><strong>response-fields</strong></p>
+<p><strong>response field</strong></p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-none hljs">{"title":"titleTest","content":"contentTest","petName":"gomgom","imgUrls":["https://user-images.githubusercontent.com/59405576/226525170-7f2465ab-6ed5-47f6-9d88-38c39481f14a.jpeg"],"stampTypes":["WALK","TREAT"],"createdAt":"2023-03-21T15:53:24.875508"}</code></pre>
-</div>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>title</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">일기 제목</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">일기 내용</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>petName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">일기 대상(동물)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>imgUrls</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이미지(path) 리스트</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>stampTypes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">스탬프 리스트</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>createdAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Varies</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">일기 작성일</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p><strong>Example request</strong></p>
 </div>
@@ -497,7 +538,7 @@ Vary: Access-Control-Request-Headers
 Content-Type: application/json
 Content-Length: 252
 
-{"title":"titleTest","content":"contentTest","petName":"gomgom","imgUrls":["https://user-images.githubusercontent.com/59405576/226525170-7f2465ab-6ed5-47f6-9d88-38c39481f14a.jpeg"],"stampTypes":["WALK","TREAT"],"createdAt":"2023-03-21T15:53:24.875508"}</code></pre>
+{"title":"titleTest","content":"contentTest","petName":"gomgom","imgUrls":["https://user-images.githubusercontent.com/59405576/226525170-7f2465ab-6ed5-47f6-9d88-38c39481f14a.jpeg"],"stampTypes":["WALK","TREAT"],"createdAt":"2023-03-22T11:18:37.885321"}</code></pre>
 </div>
 </div>
 <hr>
@@ -508,7 +549,7 @@ Content-Length: 252
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-03-21 15:51:16 +0900
+Last updated 2023-03-22 11:17:33 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

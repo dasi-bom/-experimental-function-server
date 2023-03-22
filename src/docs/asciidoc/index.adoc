@@ -22,6 +22,10 @@ endif::[]
 
 include::{snippets}/getDetailedDiary/curl-request.adoc[]
 
+**response field**
+
+include::{snippets}/getDetailedDiary/response-fields.adoc[]
+
 **Example request**
 
 include::{snippets}/getDetailedDiary/http-request.adoc[]

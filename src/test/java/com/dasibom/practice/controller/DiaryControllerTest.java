@@ -4,6 +4,8 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -26,6 +28,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -83,6 +86,14 @@ class DiaryControllerTest {
                 .andDo(document("getDetailedDiary",
                         pathParameters(
                                 parameterWithName("diaryId").description("조회할 일기의 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("title").type(JsonFieldType.STRING).description("일기 제목"),
+                                fieldWithPath("content").type(JsonFieldType.STRING).description("일기 내용"),
+                                fieldWithPath("petName").type(JsonFieldType.STRING).description("일기 대상(동물)"),
+                                fieldWithPath("imgUrls").type(JsonFieldType.ARRAY).description("이미지(path) 리스트"),
+                                fieldWithPath("stampTypes").type(JsonFieldType.ARRAY).description("스탬프 리스트"),
+                                fieldWithPath("createdAt").type(JsonFieldType.VARIES).description("일기 작성일")
                         )));
     }
 
