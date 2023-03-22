@@ -1,7 +1,7 @@
 package com.dasibom.practice.controller;
 
 import com.dasibom.practice.domain.Response;
-import com.dasibom.practice.dto.ProtectionEndReqDto;
+import com.dasibom.practice.dto.ProtectionDto;
 import com.dasibom.practice.service.ProtectionService;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
@@ -22,7 +22,7 @@ public class ProtectionController {
 
     @ApiOperation(value = "임보 종료하기", notes = "스탬프 별 다시보기 컨텐츠 생성")
     @PostMapping("/end")
-    public Response saveEndStatus(@RequestBody @Valid ProtectionEndReqDto protectEndReqDto) {
+    public Response saveEndStatus(@RequestBody @Valid ProtectionDto.EndRequest protectEndReqDto) {
         protectionService.saveEndStatus(protectEndReqDto);
         return new Response("OK", "임시보호 종료에 성공했습니다");
     }

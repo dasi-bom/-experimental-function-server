@@ -8,7 +8,6 @@ import static com.dasibom.practice.exception.ErrorCode.STAMP_LIST_SIZE_ERROR;
 import static com.dasibom.practice.exception.ErrorCode.STAMP_NOT_FOUND;
 import static com.dasibom.practice.exception.ErrorCode.USER_NOT_FOUND;
 
-import com.dasibom.practice.condition.DiaryReadCondition;
 import com.dasibom.practice.domain.Diary;
 import com.dasibom.practice.domain.DiaryStamp;
 import com.dasibom.practice.domain.Pet;
@@ -16,10 +15,7 @@ import com.dasibom.practice.domain.Record;
 import com.dasibom.practice.domain.Stamp;
 import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
-import com.dasibom.practice.dto.DiaryBriefResDto;
-import com.dasibom.practice.dto.DiaryDetailResDto;
-import com.dasibom.practice.dto.DiarySaveReqDto;
-import com.dasibom.practice.dto.DiaryUpdateReqDto;
+import com.dasibom.practice.dto.DiaryDto;
 import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.repository.DiaryRepository;
 import com.dasibom.practice.repository.PetRepository;
@@ -59,7 +55,7 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public Diary save(Long diaryId, DiarySaveReqDto requestDto) {
+    public Diary save(Long diaryId, DiaryDto.SaveRequest requestDto) {
 
         // TODO: 하드 코딩 변경
         User user = userRepository.findByUsername("test")
@@ -79,29 +75,29 @@ public class DiaryServiceImpl implements DiaryService {
         List<DiaryStamp> diaryStamps = makeDiaryStamps(stamps);
         Pet pet = petRepository.findByPetNameAndOwner(requestDto.getPet().getPetName(), user)
                 .orElseThrow(() -> new CustomException(PET_NOT_FOUND));
-        return getDiary(diaryId, requestDto, user, diaryStamps, pet);
+        return saveDiary(diaryId, requestDto, user, diaryStamps, pet);
     }
 
     @Override
     @Transactional
-    public DiaryDetailResDto getDetailedDiary(Long diaryId) {
+    public DiaryDto.DetailResponse getDetailedDiary(Long diaryId) {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new CustomException(DIARY_NOT_FOUND));
         if (diary.getIsDeleted()) {
             throw new CustomException(DIARY_NOT_FOUND);
         }
-        return new DiaryDetailResDto(diary);
+        return new DiaryDto.DetailResponse(diary);
     }
 
     @Override
     @Transactional
-    public Slice<DiaryBriefResDto> getDiaryList(Long cursor, DiaryReadCondition condition, Pageable pageRequest) {
+    public Slice<DiaryDto.SimpleResponse> getDiaryList(Long cursor, DiaryDto.ReadCondition condition, Pageable pageRequest) {
         return diaryRepository.getDiaryBriefInfoScroll(cursor, condition, pageRequest);
     }
 
     @Override
     @Transactional
-    public void update(Long diaryId, DiaryUpdateReqDto updateRequestDto) {
+    public void update(Long diaryId, DiaryDto.UpdateRequest updateRequestDto) {
 
         // TODO: 하드 코딩 변경
         User user = userRepository.findByUsername("test")
@@ -154,15 +150,15 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public List<DiaryDetailResDto> getRecordList(StampType stampType, String petName, User user) {
+    public List<DiaryDto.DetailResponse> getRecordList(StampType stampType, String petName, User user) {
         Pet pet = petRepository.findByPetNameAndOwner(petName, user)
                 .orElseThrow(() -> new CustomException(PET_NOT_FOUND));
-        List<DiaryDetailResDto> result = new ArrayList<>();
+        List<DiaryDto.DetailResponse> result = new ArrayList<>();
         Record record = recordRepository.findByPetAndStampType(pet, stampType)
                 .orElseThrow(() -> new CustomException(RECORD_NOT_FOUND));
 
         for (Diary diary : record.getDiaries()) {
-            result.add(new DiaryDetailResDto(diary));
+            result.add(new DiaryDto.DetailResponse(diary));
         }
         return result;
     }
@@ -177,7 +173,7 @@ public class DiaryServiceImpl implements DiaryService {
         return pet;
     }
 
-    private List<DiaryStamp> updateStamp(DiaryUpdateReqDto updateRequestDto, Diary diary) {
+    private List<DiaryStamp> updateStamp(DiaryDto.UpdateRequest updateRequestDto, Diary diary) {
         // initialize oldStamps
         List<DiaryStamp> oldDiaryStamps = diary.getDiaryStamps();
         List<Stamp> oldStamps = new ArrayList<>();
@@ -204,7 +200,7 @@ public class DiaryServiceImpl implements DiaryService {
         return newDiaryStamps;
     }
 
-    private Diary getDiary(Long diaryId, DiarySaveReqDto requestDto, User user, List<DiaryStamp> diaryStamps, Pet pet) {
+    private Diary saveDiary(Long diaryId, DiaryDto.SaveRequest requestDto, User user, List<DiaryStamp> diaryStamps, Pet pet) {
         Diary diary = Diary.createDiary(diaryId, user, pet, requestDto.getTitle(), requestDto.getContent(),
                 diaryStamps);
         diaryRepository.save(diary);

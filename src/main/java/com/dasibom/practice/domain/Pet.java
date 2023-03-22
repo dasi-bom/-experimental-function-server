@@ -14,10 +14,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "pet_tb")
 public class Pet {
 
@@ -41,6 +46,14 @@ public class Pet {
 
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL)
     private List<Record> records = new ArrayList<>();
+
+    @Builder
+    public Pet(Long id, User owner, String petName, LocalDate protectionStartedAt) {
+        this.id = id;
+        this.owner = owner;
+        this.petName = petName;
+        this.protectionStartedAt = protectionStartedAt;
+    }
 
     public void updateProtectionEndedAt() {
         protectionEndedAt = LocalDate.now();

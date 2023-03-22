@@ -9,7 +9,7 @@ import com.dasibom.practice.domain.Pet;
 import com.dasibom.practice.domain.Record;
 import com.dasibom.practice.domain.StampType;
 import com.dasibom.practice.domain.User;
-import com.dasibom.practice.dto.ProtectionEndReqDto;
+import com.dasibom.practice.dto.ProtectionDto;
 import com.dasibom.practice.exception.CustomException;
 import com.dasibom.practice.repository.DiaryRepository;
 import com.dasibom.practice.repository.PetRepository;
@@ -38,7 +38,7 @@ public class ProtectionServiceImpl implements ProtectionService {
 
     @Override
     @Transactional
-    public void saveEndStatus(ProtectionEndReqDto protectionEndReqDto) {
+    public void saveEndStatus(ProtectionDto.EndRequest protectionEndReqDto) {
         // TODO: 하드 코딩 변경
         User user = userRepository.findByUsername("test")
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
